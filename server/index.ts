@@ -27,10 +27,6 @@ function routeShell() {
 export default capsule({
   name: "edinburgh-floral-portfolio",
   endpoints: {
-    one: endpoint({ method: "GET", path: "/1" }, routeShell),
-    two: endpoint({ method: "GET", path: "/2" }, routeShell),
-    three: endpoint({ method: "GET", path: "/3" }, routeShell),
-    four: endpoint({ method: "GET", path: "/4" }, routeShell),
-    five: endpoint({ method: "GET", path: "/5" }, routeShell)
+    home: endpoint({ method: "GET", path: "/" }, routeShell)
   }
 });
