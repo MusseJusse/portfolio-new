@@ -11,16 +11,16 @@ const artworkCollections: ArtworkCollection[] = [
   {
     id: "paintings",
     label: "Paintings",
-    items: artwork.slice(8, 10)
+    items: [artwork[8], artwork[9], artwork[17], artwork[18]]
   },
   {
-    id: "cream-paper-ink",
-    label: "Ink drawings on cream paper",
+    id: "flash-collection",
+    label: "Flash collection 1",
     items: artwork.slice(0, 8)
   },
   {
-    id: "blue-pen-white-paper",
-    label: "Blue pen drawings on white paper",
+    id: "flash-collection-2",
+    label: "Flash collection 2",
     items: artwork.slice(10)
   }
 ];
@@ -81,11 +81,11 @@ function HomePage() {
               <ImageTile item={artwork[9]} className="h-full min-h-[72vh]" />
             </button>
             <div className="grid gap-4">
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[0])}>
-                <ImageTile item={artwork[0]} className="h-full min-h-[34vh]" />
+              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[7])}>
+                <ImageTile item={artwork[7]} className="h-full min-h-[34vh]" />
               </button>
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[14])}>
-                <ImageTile item={artwork[14]} className="h-full min-h-[34vh]" />
+              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[10])}>
+                <ImageTile item={artwork[10]} className="h-full min-h-[34vh]" />
               </button>
             </div>
           </div>

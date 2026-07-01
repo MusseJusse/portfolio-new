@@ -18,4 +18,6 @@ export const artwork: Artwork[] = [
   { id: "work-15", title: "Skull study", medium: "Fine-line tattoo flash", alt: "Skull study by an Edinburgh-based painter and tattoo artist", src: "https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/artwork/work-15.webp" },
   { id: "work-16", title: "Butterfly sheet", medium: "Fine-line tattoo flash", alt: "Butterfly sheet by an Edinburgh-based painter and tattoo artist", src: "https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/artwork/work-16.webp" },
   { id: "work-17", title: "Dove study", medium: "Illustrative tattoo flash", alt: "Dove study by an Edinburgh-based painter and tattoo artist", src: "https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/artwork/work-17.webp" },
+  { id: "work-18", title: "Peonies", medium: "Gouache floral painting", alt: "Peonies by an Edinburgh-based painter and tattoo artist", src: "https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/artwork/work-18.webp" },
+  { id: "work-19", title: "Waterlilies", medium: "Gouache floral painting", alt: "Waterlilies by an Edinburgh-based painter and tattoo artist", src: "https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/artwork/work-19.webp" },
 ];
