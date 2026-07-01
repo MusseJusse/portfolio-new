@@ -70,7 +70,7 @@ function HomePage() {
           <div className="flex flex-col justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
-              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Flowers, wings, and fine lines</h1>
+              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Florals, feathers, and fine lines</h1>
             </div>
             <div className="mt-10 max-w-md lg:mt-0">
               <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
