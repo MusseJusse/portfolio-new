@@ -69,7 +69,11 @@ function HomePage() {
         <header className="mb-6 grid min-h-[92vh] gap-8 lg:grid-cols-[0.42fr_0.58fr]">
           <div className="flex flex-col justify-between">
             <div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
+              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Flowers, wings, and fine lines</h1>
+            </div>
+            <div className="mt-10 max-w-md lg:mt-0">
+              <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
                 <p className="text-sm font-semibold uppercase tracking-[0.34em] text-[#9b5c44]">Ruby Smythe</p>
                 <a className="inline-grid h-8 w-8 place-items-center rounded-full border border-[#161b1a]/15 text-[#63716e] transition hover:border-[#9b5c44] hover:text-[#9b5c44] focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram, byrubydesigns">
                   <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -79,12 +83,10 @@ function HomePage() {
                   </svg>
                 </a>
               </div>
-              <p className="mt-4 text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
-              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Flowers, wings, and fine lines</h1>
+              <p className="text-lg leading-8">
+                A working archive of tattoo drawings and gouache studies from Ruby Smythe, a New Zealand-born artist based in Edinburgh.
+              </p>
             </div>
-            <p className="max-w-md text-lg leading-8">
-              A working archive of tattoo drawings and gouache studies from Ruby Smythe, a New Zealand-born artist based in Edinburgh.
-            </p>
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_0.7fr]">
             <button className="block min-h-[72vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(0, artwork[9])}>
