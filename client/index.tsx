@@ -66,14 +66,24 @@ function HomePage() {
     <main className="min-h-screen bg-[#f7f3ec] text-[#161b1a]">
       <StyleBlock />
       <section className="mx-auto max-w-[1500px] px-5 py-6 md:px-8">
-        <header className="grid min-h-[92vh] gap-8 lg:grid-cols-[0.42fr_0.58fr]">
+        <header className="mb-6 grid min-h-[92vh] gap-8 lg:grid-cols-[0.42fr_0.58fr]">
           <div className="flex flex-col justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <p className="text-sm font-semibold uppercase tracking-[0.34em] text-[#9b5c44]">Ruby Smythe</p>
+                <a className="inline-grid h-8 w-8 place-items-center rounded-full border border-[#161b1a]/15 text-[#63716e] transition hover:border-[#9b5c44] hover:text-[#9b5c44] focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram, byrubydesigns">
+                  <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="4" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.8" />
+                    <circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="1.8" />
+                    <circle cx="17" cy="7" r="1.1" fill="currentColor" />
+                  </svg>
+                </a>
+              </div>
+              <p className="mt-4 text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
               <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Flowers, wings, and fine lines</h1>
             </div>
             <p className="max-w-md text-lg leading-8">
-              A working archive of tattoo drawings and gouache studies from a New Zealand-born artist based in Edinburgh.
+              A working archive of tattoo drawings and gouache studies from Ruby Smythe, a New Zealand-born artist based in Edinburgh.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_0.7fr]">
