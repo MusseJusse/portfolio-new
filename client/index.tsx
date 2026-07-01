@@ -1,6 +1,30 @@
 import { useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 
+type ArtworkCollection = {
+  id: string;
+  label: string;
+  items: Artwork[];
+};
+
+const artworkCollections: ArtworkCollection[] = [
+  {
+    id: "paintings",
+    label: "Paintings",
+    items: artwork.slice(8, 10)
+  },
+  {
+    id: "cream-paper-ink",
+    label: "Ink drawings on cream paper",
+    items: artwork.slice(0, 8)
+  },
+  {
+    id: "blue-pen-white-paper",
+    label: "Blue pen drawings on white paper",
+    items: artwork.slice(10)
+  }
+];
+
 function ImageTile({ item, className = "", caption = true }: { item: Artwork; className?: string; caption?: boolean }) {
   return (
     <figure className={"group relative overflow-hidden " + className}>
@@ -16,20 +40,26 @@ function ImageTile({ item, className = "", caption = true }: { item: Artwork; cl
 }
 
 function HomePage() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const activeItem = activeIndex === null ? null : artwork[activeIndex];
+  const [activeCollectionIndex, setActiveCollectionIndex] = useState<number | null>(null);
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const activeCollection = activeCollectionIndex === null ? null : artworkCollections[activeCollectionIndex];
+  const activeItem = activeCollection ? activeCollection.items[activeItemIndex] : null;
 
-  function openArtwork(item: Artwork) {
-    const nextIndex = artwork.findIndex((candidate) => candidate.id === item.id);
-    setActiveIndex(nextIndex >= 0 ? nextIndex : 0);
+  function openCollection(collectionIndex: number, item: Artwork) {
+    const collection = artworkCollections[collectionIndex];
+    const nextIndex = collection.items.findIndex((candidate) => candidate.id === item.id);
+    setActiveCollectionIndex(collectionIndex);
+    setActiveItemIndex(nextIndex >= 0 ? nextIndex : 0);
   }
 
   function showPrevious() {
-    setActiveIndex((current) => current === null ? 0 : (current + artwork.length - 1) % artwork.length);
+    if (!activeCollection) return;
+    setActiveItemIndex((current) => (current + activeCollection.items.length - 1) % activeCollection.items.length);
   }
 
   function showNext() {
-    setActiveIndex((current) => current === null ? 0 : (current + 1) % artwork.length);
+    if (!activeCollection) return;
+    setActiveItemIndex((current) => (current + 1) % activeCollection.items.length);
   }
 
   return (
@@ -47,14 +77,14 @@ function HomePage() {
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_0.7fr]">
-            <button className="block min-h-[72vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openArtwork(artwork[9])}>
+            <button className="block min-h-[72vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(0, artwork[9])}>
               <ImageTile item={artwork[9]} className="h-full min-h-[72vh]" />
             </button>
             <div className="grid gap-4">
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openArtwork(artwork[0])}>
+              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[0])}>
                 <ImageTile item={artwork[0]} className="h-full min-h-[34vh]" />
               </button>
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openArtwork(artwork[14])}>
+              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[14])}>
                 <ImageTile item={artwork[14]} className="h-full min-h-[34vh]" />
               </button>
             </div>
@@ -80,10 +110,10 @@ function HomePage() {
           <div className="mx-auto grid h-full w-full max-w-[1320px] grid-rows-[auto_1fr_auto] gap-4">
             <header className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-[#d8c3b4]">{activeIndex + 1} / {artwork.length}</p>
+                <p className="text-xs uppercase tracking-[0.24em] text-[#d8c3b4]">{activeCollection?.label} / {activeItemIndex + 1} / {activeCollection?.items.length}</p>
                 <h2 className="mt-1 text-xl font-semibold">{activeItem.title}</h2>
               </div>
-              <button className="rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={() => setActiveIndex(null)}>
+              <button className="rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={() => setActiveCollectionIndex(null)}>
                 Close
               </button>
             </header>
@@ -101,13 +131,13 @@ function HomePage() {
                 </button>
               </div>
               <div className="hidden justify-end gap-2 md:flex">
-                {artwork.map((item, index) => (
+                {activeCollection?.items.map((item, index) => (
                   <button
                     aria-label={"Show " + item.title}
-                    className={"h-12 w-10 overflow-hidden rounded-[3px] border " + (index === activeIndex ? "border-white" : "border-white/20 opacity-60")}
+                    className={"h-12 w-10 overflow-hidden rounded-[3px] border " + (index === activeItemIndex ? "border-white" : "border-white/20 opacity-60")}
                     key={item.id}
                     type="button"
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => setActiveItemIndex(index)}
                   >
                     <img alt="" className="h-full w-full object-cover" src={item.src} />
                   </button>
