@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 
 type ArtworkCollection = {
@@ -44,6 +44,20 @@ function HomePage() {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const activeCollection = activeCollectionIndex === null ? null : artworkCollections[activeCollectionIndex];
   const activeItem = activeCollection ? activeCollection.items[activeItemIndex] : null;
+
+  useEffect(() => {
+    if (!activeItem) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [activeItem]);
 
   function openCollection(collectionIndex: number, item: Artwork) {
     const collection = artworkCollections[collectionIndex];
