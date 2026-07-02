@@ -16,22 +16,12 @@ const artworkCollections: ArtworkCollection[] = [
   {
     id: "flash-collection",
     label: "Flash collection 1",
-    items: artwork.slice(0, 8)
+    items: [artwork[7], artwork[10], artwork[22]]
   },
   {
-    id: "flash-collection-2",
-    label: "Flash collection 2",
-    items: artwork.slice(10, 17)
-  },
-  {
-    id: "finished-tattoos",
-    label: "Finished tattoos",
+    id: "real-work",
+    label: "Real work",
     items: [...artwork.slice(19, 22), ...artwork.slice(23, 31)]
-  },
-  {
-    id: "flash-collection-3",
-    label: "Flash collection 3",
-    items: [artwork[22]]
   }
 ];
 
@@ -106,8 +96,8 @@ function HomePage() {
               <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[7])}>
                 <ImageTile item={artwork[7]} className="h-full min-h-[34vh]" />
               </button>
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[10])}>
-                <ImageTile item={artwork[10]} className="h-full min-h-[34vh]" />
+              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[29])}>
+                <ImageTile item={artwork[29]} className="h-full min-h-[34vh]" />
               </button>
             </div>
           </div>
@@ -137,7 +127,7 @@ function HomePage() {
       </section>
       {activeItem ? (
         <div className="fixed inset-0 z-50 grid bg-[#161b1a]/92 px-4 py-5 text-[#f7f3ec] backdrop-blur md:px-8" role="dialog" aria-modal="true" aria-label="Artwork carousel">
-          <div className="mx-auto grid h-full w-full max-w-[1320px] grid-rows-[auto_1fr_auto] gap-4">
+          <div className="mx-auto grid h-[calc(100dvh-2.5rem)] w-full max-w-[1320px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4">
             <header className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.24em] text-[#d8c3b4]">{activeCollection?.label} / {activeItemIndex + 1} / {activeCollection?.items.length}</p>
@@ -147,10 +137,10 @@ function HomePage() {
                 Close
               </button>
             </header>
-            <div className="grid min-h-0 place-items-center">
-              <img alt={activeItem.alt} className="max-h-full max-w-full rounded-[7px] object-contain shadow-[0_30px_90px_rgba(0,0,0,0.45)]" src={activeItem.src} />
+            <div className="grid min-h-0 place-items-center overflow-hidden">
+              <img alt={activeItem.alt} className="max-h-[76vh] max-w-full rounded-[7px] object-contain shadow-[0_30px_90px_rgba(0,0,0,0.45)]" src={activeItem.src} />
             </div>
-            <footer className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+            <footer className="grid shrink-0 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
               <p className="text-sm text-[#d8c3b4]">{activeItem.medium}</p>
               <div className="flex items-center justify-center gap-3">
                 <button className="rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={showPrevious}>
