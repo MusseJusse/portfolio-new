@@ -107,11 +107,19 @@ function HomePage() {
             ["01", "New Zealand", "Native softness, bird forms, and botanical memory."],
             ["02", "Drawing table", "Pencil-weight precision before a needle ever touches skin."],
             ["03", "Edinburgh", "Private appointments, placement-led compositions."],
-            ["04", "Collected marks", "Fine-line florals and gouache studies for people who keep looking."]
+            ["04", "Inkdependent Studio", "Tattoo studio in Haymarket, Edinburgh."]
           ].map(([step, title, copy]) => (
             <article className="border-l border-[#161b1a]/20 pl-4" key={step}>
               <p className="text-xs uppercase tracking-[0.24em] text-[#9b5c44]">{step}</p>
-              <h2 className="mt-5 text-2xl font-semibold">{title}</h2>
+              <h2 className="mt-5 text-2xl font-semibold">
+                {step === "04" ? (
+                  <a className="transition hover:text-[#9b5c44] focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" href="https://inkdependent.eu/" target="_blank" rel="noreferrer">
+                    {title}
+                  </a>
+                ) : (
+                  title
+                )}
+              </h2>
               <p className="mt-3 text-sm leading-6 text-[#63716e]">{copy}</p>
             </article>
           ))}
