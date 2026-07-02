@@ -103,14 +103,14 @@ function HomePage() {
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_0.7fr]">
-            <button className="block min-h-[72vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(0, artwork[9])}>
+            <button className="tap-target block min-h-[72vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(0, artwork[9])}>
               <ImageTile item={artwork[9]} className="h-full min-h-[72vh]" />
             </button>
             <div className="grid gap-4">
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[7])}>
+              <button className="tap-target block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(1, artwork[7])}>
                 <ImageTile item={artwork[7]} className="h-full min-h-[34vh]" />
               </button>
-              <button className="block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[29])}>
+              <button className="tap-target block min-h-[34vh] cursor-zoom-in overflow-hidden rounded-[7px] text-left focus:outline-none focus:ring-2 focus:ring-[#9b5c44] focus:ring-offset-4 focus:ring-offset-[#f7f3ec]" type="button" onClick={() => openCollection(2, artwork[29])}>
                 <ImageTile item={artwork[29]} className="h-full min-h-[34vh]" />
               </button>
             </div>
@@ -147,7 +147,7 @@ function HomePage() {
                 <p className="text-xs uppercase tracking-[0.24em] text-[#d8c3b4]">{activeCollection?.label} / {activeItemIndex + 1} / {activeCollection?.items.length}</p>
                 <h2 className="mt-1 text-xl font-semibold">{activeItem.title}</h2>
               </div>
-              <button className="rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={() => setActiveCollectionIndex(null)}>
+              <button className="tap-target rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={() => setActiveCollectionIndex(null)}>
                 Close
               </button>
             </header>
@@ -157,10 +157,10 @@ function HomePage() {
             <footer className="grid shrink-0 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
               <p className="text-sm text-[#d8c3b4]">{activeItem.medium}</p>
               <div className="flex items-center justify-center gap-3">
-                <button className="rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={showPrevious}>
+                <button className="tap-target rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={showPrevious}>
                   Previous
                 </button>
-                <button className="rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={showNext}>
+                <button className="tap-target rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] hover:bg-white hover:text-[#161b1a] focus:outline-none focus:ring-2 focus:ring-white" type="button" onClick={showNext}>
                   Next
                 </button>
               </div>
@@ -168,7 +168,7 @@ function HomePage() {
                 {activeCollection?.items.map((item, index) => (
                   <button
                     aria-label={"Show " + item.title}
-                    className={"h-12 w-10 overflow-hidden rounded-[3px] border " + (index === activeItemIndex ? "border-white" : "border-white/20 opacity-60")}
+                    className={"tap-target h-12 w-10 overflow-hidden rounded-[3px] border " + (index === activeItemIndex ? "border-white" : "border-white/20 opacity-60")}
                     key={item.id}
                     type="button"
                     onClick={() => setActiveItemIndex(index)}
@@ -189,6 +189,7 @@ function StyleBlock() {
   return (
     <style>{`
       .journey-title { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
+      .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
       }
