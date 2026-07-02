@@ -84,7 +84,7 @@ function HomePage() {
           <div className="flex flex-col justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
-              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Florals, feathers, and fine lines</h1>
+              <h1 className="journey-title mt-7 text-[clamp(4rem,11vw,10rem)] leading-[0.78]">Fauna, feathers, and fine lines</h1>
             </div>
             <div className="mt-10 max-w-md lg:mt-0">
               <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -119,9 +119,9 @@ function HomePage() {
         <section className="grid gap-5 border-t border-[#161b1a]/15 py-8 md:grid-cols-4">
           {[
             ["01", "New Zealand", "Native softness, bird forms, and botanical memory."],
-            ["02", "Drawing table", "Pencil-weight precision before a needle ever touches skin."],
-            ["03", "Edinburgh", "Private appointments, placement-led compositions."],
-            ["04", "Inkdependent Studio", "Tattoo studio in Haymarket, Edinburgh."]
+            ["02", "Edinburgh", "Private appointments, placement-led compositions."],
+            ["03", "Expertise", "Creating bespoke pieces inspired by all corners of the natural world."],
+            ["04", "Inkdependent Studio", "Tattoo studio in Haymarket, Edinburgh. Taking private appointments and walk-ins."]
           ].map(([step, title, copy]) => (
             <article className="border-l border-[#161b1a]/20 pl-4" key={step}>
               <p className="text-xs uppercase tracking-[0.24em] text-[#9b5c44]">{step}</p>
