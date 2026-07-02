@@ -21,7 +21,7 @@ const artworkCollections: ArtworkCollection[] = [
   {
     id: "flash-collection-2",
     label: "Flash collection 2",
-    items: artwork.slice(10)
+    items: artwork.slice(10, 17)
   }
 ];
 
@@ -66,7 +66,7 @@ function HomePage() {
     <main className="min-h-screen bg-[#f7f3ec] text-[#161b1a]">
       <StyleBlock />
       <section className="mx-auto max-w-[1500px] px-5 py-6 md:px-8">
-        <header className="mb-6 grid min-h-[92vh] gap-8 lg:grid-cols-[0.42fr_0.58fr]">
+        <header className="mb-6 grid min-h-[92vh] gap-8 lg:grid-cols-[minmax(650px,0.42fr)_minmax(0,1fr)]">
           <div className="flex flex-col justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#63716e]">Aotearoa to Edinburgh</p>
