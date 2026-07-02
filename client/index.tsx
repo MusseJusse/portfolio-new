@@ -22,6 +22,16 @@ const artworkCollections: ArtworkCollection[] = [
     id: "flash-collection-2",
     label: "Flash collection 2",
     items: artwork.slice(10, 17)
+  },
+  {
+    id: "finished-tattoos",
+    label: "Finished tattoos",
+    items: [...artwork.slice(19, 22), ...artwork.slice(23, 31)]
+  },
+  {
+    id: "flash-collection-3",
+    label: "Flash collection 3",
+    items: [artwork[22]]
   }
 ];
 
