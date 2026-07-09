@@ -31,10 +31,12 @@ const artworkCollections: ArtworkCollection[] = [
 ];
 
 const finishedTattooItems = artwork.filter((item) => item.medium === "Finished tattoo");
+const paintingItems = artwork.filter((item) => item.medium.includes("Gouache"));
+const flashItems = artwork.filter((item) => item.medium !== "Finished tattoo" && !item.medium.includes("Gouache"));
 
 const sets: WorkSet[] = [
-  { label: "Paintings", items: [artwork[8], artwork[9], artwork[17], artwork[18]] },
-  { label: "Flash", items: [artwork[0], artwork[6], artwork[7], artwork[10], artwork[12], artwork[13], artwork[15]] },
+  { label: "Paintings", items: paintingItems },
+  { label: "Flash", items: flashItems },
   { label: "Tattoo work", items: finishedTattooItems }
 ];
 
@@ -218,8 +220,10 @@ function HomePage() {
 
 function DarkPortfolioPage() {
   const featuredItems = [artwork[23], artwork[26], artwork[29]];
+  const [selectedSetIndex, setSelectedSetIndex] = useState(0);
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
-  const activeItem = activeItemIndex === null ? null : finishedTattooItems[activeItemIndex];
+  const selectedSet = sets[selectedSetIndex];
+  const activeItem = activeItemIndex === null ? null : selectedSet.items[activeItemIndex];
 
   useEffect(() => {
     if (!activeItem) return;
@@ -252,23 +256,32 @@ function DarkPortfolioPage() {
     };
   }, [activeItem]);
 
-  function openFinishedTattoo(item: Artwork) {
-    const nextIndex = finishedTattooItems.findIndex((candidate) => candidate.id === item.id);
+  function openFeaturedWork(item: Artwork) {
+    const finishedSetIndex = sets.findIndex((set) => set.items.some((candidate) => candidate.id === item.id));
+    const nextSetIndex = finishedSetIndex >= 0 ? finishedSetIndex : selectedSetIndex;
+    const nextSet = sets[nextSetIndex];
+    const nextIndex = nextSet.items.findIndex((candidate) => candidate.id === item.id);
+    setSelectedSetIndex(nextSetIndex);
     setActiveItemIndex(nextIndex >= 0 ? nextIndex : 0);
   }
 
   function showPrevious() {
     setActiveItemIndex((current) => {
       if (current === null) return current;
-      return (current + finishedTattooItems.length - 1) % finishedTattooItems.length;
+      return (current + selectedSet.items.length - 1) % selectedSet.items.length;
     });
   }
 
   function showNext() {
     setActiveItemIndex((current) => {
       if (current === null) return current;
-      return (current + 1) % finishedTattooItems.length;
+      return (current + 1) % selectedSet.items.length;
     });
+  }
+
+  function selectSet(nextSetIndex: number) {
+    setSelectedSetIndex(nextSetIndex);
+    setActiveItemIndex(0);
   }
 
   return (
@@ -289,7 +302,7 @@ function DarkPortfolioPage() {
                 className="tap-target block cursor-zoom-in overflow-hidden rounded-[8px] border border-white/10 text-left shadow-[0_30px_90px_rgba(0,0,0,0.45)] transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#e6bd78] focus:ring-offset-4 focus:ring-offset-[#080806] active:scale-[0.985]"
                 key={item.id}
                 type="button"
-                onClick={() => openFinishedTattoo(item)}
+                onClick={() => openFeaturedWork(item)}
               >
                 <WorkImage item={item} className="h-[44vh]" caption />
               </button>
@@ -297,13 +310,21 @@ function DarkPortfolioPage() {
           </div>
         </div>
       </section>
-      <section className="mx-auto grid max-w-[1500px] gap-6 border-t border-white/10 px-5 py-14 md:grid-cols-3 md:px-10">
-        {sets.map((set) => (
-          <article className="border-l border-white/15 pl-5" key={set.label}>
-            <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">{set.label}</p>
-            <p className="mt-5 text-3xl leading-tight">{set.items.length} studies for skin, paper, and placement.</p>
-          </article>
-        ))}
+      <section className="mx-auto max-w-[1500px] border-t border-white/10 px-5 py-14 md:px-10">
+        <div className="grid gap-6 md:grid-cols-3">
+          {sets.map((set, index) => (
+            <button
+              aria-label={"Open " + set.label + " collection"}
+              className="tap-target group border-l border-white/15 pl-5 text-left transition duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[#e6bd78] focus:outline-none focus:ring-2 focus:ring-[#e6bd78] focus:ring-offset-4 focus:ring-offset-[#080806] active:scale-[0.985]"
+              key={set.label}
+              type="button"
+              onClick={() => selectSet(index)}
+            >
+              <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">{set.label}</p>
+              <p className="mt-5 text-3xl leading-tight">{set.items.length} studies for skin, paper, and placement.</p>
+            </button>
+          ))}
+        </div>
       </section>
       {activeItem ? (
         <div
@@ -316,7 +337,7 @@ function DarkPortfolioPage() {
           <div className="mx-auto grid h-[calc(100dvh-2.5rem)] w-full max-w-[1280px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4">
             <header className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">Finished tattoos / {(activeItemIndex ?? 0) + 1} / {finishedTattooItems.length}</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">{selectedSet.label} / {(activeItemIndex ?? 0) + 1} / {selectedSet.items.length}</p>
                 <h2 className="mt-1 text-xl font-semibold">{activeItem.title}</h2>
               </div>
               <button
@@ -356,7 +377,7 @@ function DarkPortfolioPage() {
                 </button>
               </div>
               <div className="hidden justify-end gap-2 md:flex" onClick={(event) => event.stopPropagation()}>
-                {finishedTattooItems.map((item, index) => (
+                {selectedSet.items.map((item, index) => (
                   <button
                     aria-label={"Show " + item.title}
                     className={"tap-target h-12 w-10 overflow-hidden rounded-[3px] border transition " + (index === activeItemIndex ? "border-[#f7f0df]" : "border-white/20 opacity-60 hover:opacity-100")}
