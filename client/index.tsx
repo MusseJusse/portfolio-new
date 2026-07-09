@@ -559,27 +559,27 @@ function DarkPortfolioPage() {
             </div>
             <button
               aria-label="Show previous image"
-              className="tap-target group absolute left-2 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:bottom-[-1rem] md:left-[-2rem] md:top-[-1rem] md:h-auto md:w-[calc(9rem+2rem)] md:translate-y-0"
+              className="tap-target group absolute bottom-0 left-0 top-0 z-20 grid w-10 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:w-14"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
                 showPrevious();
               }}
             >
-              <svg aria-hidden="true" className="h-9 w-9 rounded-full bg-black/10 p-1 transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-black/35 group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
+              <svg aria-hidden="true" className="h-9 w-9 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
                 <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
             <button
               aria-label="Show next image"
-              className="tap-target group absolute right-2 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:bottom-[-1rem] md:right-[-2rem] md:top-[-1rem] md:h-auto md:w-[calc(9rem+2rem)] md:translate-y-0"
+              className="tap-target group absolute bottom-0 right-0 top-0 z-20 grid w-10 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:w-14"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
                 showNext();
               }}
             >
-              <svg aria-hidden="true" className="h-9 w-9 rounded-full bg-black/10 p-1 transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-black/35 group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
+              <svg aria-hidden="true" className="h-9 w-9 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
                 <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
@@ -589,8 +589,8 @@ function DarkPortfolioPage() {
                   <button
                     aria-label={"Show " + item.title}
                     className={cx(
-                      "tap-target h-11 w-9 shrink-0 overflow-hidden rounded-[3px] transition-[opacity,transform,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.94]",
-                      index === activeItemIndex ? "opacity-100 shadow-[0_0_0_2px_#f7f0df]" : "opacity-45 hover:opacity-85"
+                      "tap-target h-11 w-9 shrink-0 overflow-hidden rounded-[3px] transition-[opacity,transform,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus:outline-none focus:ring-2 focus:ring-[#e6bd78] active:scale-[0.94]",
+                      index === activeItemIndex ? "opacity-100 shadow-[0_0_0_2px_#e6bd78]" : "opacity-45 hover:opacity-85"
                     )}
                     key={item.id}
                     type="button"
