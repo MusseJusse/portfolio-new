@@ -222,7 +222,27 @@ function DarkPortfolioPage() {
   const featuredItems = [artwork[23], artwork[26], artwork[29]];
   const [selectedSetIndex, setSelectedSetIndex] = useState(0);
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
+  const [lightboxZoom, setLightboxZoom] = useState({ scale: 1, x: 0, y: 0 });
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const zoomGestureRef = useRef<
+    | {
+        mode: "pinch";
+        distance: number;
+        centerX: number;
+        centerY: number;
+        scale: number;
+        x: number;
+        y: number;
+      }
+    | {
+        mode: "pan";
+        x: number;
+        y: number;
+        translateX: number;
+        translateY: number;
+      }
+    | null
+  >(null);
   const ignoreNextClickRef = useRef(false);
   const selectedSet = sets[selectedSetIndex];
   const activeItem = activeItemIndex === null ? null : selectedSet.items[activeItemIndex];
@@ -268,6 +288,11 @@ function DarkPortfolioPage() {
     };
   }, [activeItem]);
 
+  useEffect(() => {
+    setLightboxZoom({ scale: 1, x: 0, y: 0 });
+    zoomGestureRef.current = null;
+  }, [activeItem?.id]);
+
   function openFeaturedWork(item: Artwork) {
     const finishedSetIndex = sets.findIndex((set) => set.items.some((candidate) => candidate.id === item.id));
     const nextSetIndex = finishedSetIndex >= 0 ? finishedSetIndex : selectedSetIndex;
@@ -296,13 +321,104 @@ function DarkPortfolioPage() {
     setActiveItemIndex(0);
   }
 
+  function getTouchDistance(first: Touch, second: Touch) {
+    return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+  }
+
+  function getTouchCenter(first: Touch, second: Touch) {
+    return {
+      x: (first.clientX + second.clientX) / 2,
+      y: (first.clientY + second.clientY) / 2
+    };
+  }
+
+  function clampZoom(scale: number) {
+    return Math.min(4, Math.max(1, scale));
+  }
+
   function handleLightboxTouchStart(event: TouchEvent) {
+    if (event.touches.length === 2) {
+      const first = event.touches[0];
+      const second = event.touches[1];
+      const center = getTouchCenter(first, second);
+
+      event.preventDefault();
+      event.stopPropagation();
+      touchStartRef.current = null;
+      zoomGestureRef.current = {
+        mode: "pinch",
+        distance: getTouchDistance(first, second),
+        centerX: center.x,
+        centerY: center.y,
+        scale: lightboxZoom.scale,
+        x: lightboxZoom.x,
+        y: lightboxZoom.y
+      };
+      return;
+    }
+
     const touch = event.touches[0];
     if (!touch) return;
+
+    if (lightboxZoom.scale > 1) {
+      event.preventDefault();
+      event.stopPropagation();
+      touchStartRef.current = null;
+      zoomGestureRef.current = {
+        mode: "pan",
+        x: touch.clientX,
+        y: touch.clientY,
+        translateX: lightboxZoom.x,
+        translateY: lightboxZoom.y
+      };
+      return;
+    }
+
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
   }
 
+  function handleLightboxTouchMove(event: TouchEvent) {
+    const gesture = zoomGestureRef.current;
+    if (!gesture) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    ignoreNextClickRef.current = true;
+
+    if (gesture.mode === "pinch" && event.touches.length >= 2) {
+      const first = event.touches[0];
+      const second = event.touches[1];
+      const center = getTouchCenter(first, second);
+      const nextScale = clampZoom((gesture.scale * getTouchDistance(first, second)) / gesture.distance);
+
+      setLightboxZoom({
+        scale: nextScale,
+        x: gesture.x + (center.x - gesture.centerX),
+        y: gesture.y + (center.y - gesture.centerY)
+      });
+      return;
+    }
+
+    if (gesture.mode === "pan" && event.touches.length === 1) {
+      const touch = event.touches[0];
+      setLightboxZoom({
+        scale: lightboxZoom.scale,
+        x: gesture.translateX + touch.clientX - gesture.x,
+        y: gesture.translateY + touch.clientY - gesture.y
+      });
+    }
+  }
+
   function handleLightboxTouchEnd(event: TouchEvent) {
+    if (zoomGestureRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      zoomGestureRef.current = null;
+
+      setLightboxZoom((current) => (current.scale <= 1.02 ? { scale: 1, x: 0, y: 0 } : current));
+      return;
+    }
+
     const start = touchStartRef.current;
     const touch = event.changedTouches[0];
     touchStartRef.current = null;
@@ -387,8 +503,8 @@ function DarkPortfolioPage() {
         >
           <div className="relative mx-auto grid h-[calc(100dvh-2rem)] w-full max-w-[1500px] place-items-center">
             <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-4">
-              <div className="pointer-events-auto rounded-full bg-black/35 px-3 py-2 text-xs font-semibold tabular-nums text-[#f7f0df]/80 shadow-[0_10px_40px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-md md:px-4">
-                {(activeItemIndex ?? 0) + 1} / {selectedSet.items.length}
+              <div className="pointer-events-auto px-1 py-1 text-sm font-semibold tabular-nums text-[#f7f0df] drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:text-base">
+                {(activeItemIndex ?? 0) + 1}/{selectedSet.items.length}
               </div>
               <button
                 aria-label="Close image"
@@ -405,15 +521,21 @@ function DarkPortfolioPage() {
               </button>
             </header>
             <div
-              className="relative grid min-h-0 w-full touch-pan-y place-items-center overflow-y-auto overflow-x-hidden py-12 md:overflow-hidden md:px-20"
+              className="relative grid min-h-0 w-full touch-none place-items-center overflow-y-auto overflow-x-hidden py-12 md:overflow-hidden md:px-20"
               onClick={closeLightboxFromBackdrop}
               onTouchStart={handleLightboxTouchStart}
+              onTouchMove={handleLightboxTouchMove}
               onTouchEnd={handleLightboxTouchEnd}
             >
               <img
                 alt={activeItem.alt}
-                className="lightbox-image relative z-10 h-auto w-full cursor-default rounded-[2px] object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] ring-1 ring-white/10 md:max-h-[86dvh] md:w-auto md:max-w-full"
+                className="lightbox-image relative z-10 h-auto w-full cursor-default select-none object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] md:max-h-[86dvh] md:w-auto md:max-w-full"
                 src={activeItem.src}
+                style={{
+                  transform: `translate3d(${lightboxZoom.x}px, ${lightboxZoom.y}px, 0) scale(${lightboxZoom.scale})`,
+                  transformOrigin: "center",
+                  transition: zoomGestureRef.current ? "none" : "transform 160ms cubic-bezier(0.23, 1, 0.32, 1)"
+                }}
                 onClick={(event) => event.stopPropagation()}
               />
             </div>
