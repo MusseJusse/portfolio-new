@@ -336,6 +336,16 @@ function DarkPortfolioPage() {
     return Math.min(4, Math.max(1, scale));
   }
 
+  function clampLightboxPan(scale: number, x: number, y: number) {
+    const maxX = (window.innerWidth * (scale - 1)) / 2;
+    const maxY = (window.innerHeight * (scale - 1)) / 2;
+
+    return {
+      x: Math.min(maxX, Math.max(-maxX, x)),
+      y: Math.min(maxY, Math.max(-maxY, y))
+    };
+  }
+
   function handleLightboxTouchStart(event: TouchEvent) {
     if (event.touches.length === 2) {
       const first = event.touches[0];
@@ -390,21 +400,24 @@ function DarkPortfolioPage() {
       const second = event.touches[1];
       const center = getTouchCenter(first, second);
       const nextScale = clampZoom((gesture.scale * getTouchDistance(first, second)) / gesture.distance);
+      const nextPan = clampLightboxPan(nextScale, gesture.x + (center.x - gesture.centerX), gesture.y + (center.y - gesture.centerY));
 
       setLightboxZoom({
         scale: nextScale,
-        x: gesture.x + (center.x - gesture.centerX),
-        y: gesture.y + (center.y - gesture.centerY)
+        x: nextPan.x,
+        y: nextPan.y
       });
       return;
     }
 
     if (gesture.mode === "pan" && event.touches.length === 1) {
       const touch = event.touches[0];
+      const nextPan = clampLightboxPan(lightboxZoom.scale, gesture.translateX + touch.clientX - gesture.x, gesture.translateY + touch.clientY - gesture.y);
+
       setLightboxZoom({
         scale: lightboxZoom.scale,
-        x: gesture.translateX + touch.clientX - gesture.x,
-        y: gesture.translateY + touch.clientY - gesture.y
+        x: nextPan.x,
+        y: nextPan.y
       });
     }
   }
@@ -415,7 +428,12 @@ function DarkPortfolioPage() {
       event.stopPropagation();
       zoomGestureRef.current = null;
 
-      setLightboxZoom((current) => (current.scale <= 1.02 ? { scale: 1, x: 0, y: 0 } : current));
+      setLightboxZoom((current) => {
+        if (current.scale <= 1.02) return { scale: 1, x: 0, y: 0 };
+
+        const nextPan = clampLightboxPan(current.scale, current.x, current.y);
+        return { ...current, x: nextPan.x, y: nextPan.y };
+      });
       return;
     }
 
@@ -521,7 +539,7 @@ function DarkPortfolioPage() {
               </button>
             </header>
             <div
-              className="relative grid min-h-0 w-full touch-none place-items-center overflow-y-auto overflow-x-hidden py-12 md:overflow-hidden md:px-20"
+              className="absolute inset-0 z-10 grid touch-none place-items-center overflow-hidden md:px-20"
               onClick={closeLightboxFromBackdrop}
               onTouchStart={handleLightboxTouchStart}
               onTouchMove={handleLightboxTouchMove}
@@ -529,7 +547,7 @@ function DarkPortfolioPage() {
             >
               <img
                 alt={activeItem.alt}
-                className="lightbox-image relative z-10 h-auto w-full cursor-default select-none object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] md:max-h-[86dvh] md:w-auto md:max-w-full"
+                className="lightbox-image h-auto max-h-full w-full cursor-default select-none object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] md:max-h-[86dvh] md:w-auto md:max-w-full"
                 src={activeItem.src}
                 style={{
                   transform: `translate3d(${lightboxZoom.x}px, ${lightboxZoom.y}px, 0) scale(${lightboxZoom.scale})`,
