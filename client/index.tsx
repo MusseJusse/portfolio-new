@@ -228,6 +228,16 @@ function DarkPortfolioPage() {
   const activeItem = activeItemIndex === null ? null : selectedSet.items[activeItemIndex];
 
   useEffect(() => {
+    document.documentElement.classList.add("dark-portfolio-root");
+    document.body.classList.add("dark-portfolio-root");
+
+    return () => {
+      document.documentElement.classList.remove("dark-portfolio-root");
+      document.body.classList.remove("dark-portfolio-root");
+    };
+  }, []);
+
+  useEffect(() => {
     if (!activeItem) return;
 
     const previousBodyOverflow = document.body.style.overflow;
@@ -446,6 +456,7 @@ function StyleBlock() {
     <style>{`
       .journey-title, .display-serif { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
       .display-serif { letter-spacing: -0.035em; }
+      .dark-portfolio-root { background: #080806; overscroll-behavior: none; }
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
