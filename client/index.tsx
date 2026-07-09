@@ -44,6 +44,26 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
+function lockDocumentScroll() {
+  const previousBodyOverflow = document.body.style.overflow;
+  const previousBodyPaddingRight = document.body.style.paddingRight;
+  const previousHtmlOverflow = document.documentElement.style.overflow;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
+  if (scrollbarWidth > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+
+  return () => {
+    document.body.style.overflow = previousBodyOverflow;
+    document.body.style.paddingRight = previousBodyPaddingRight;
+    document.documentElement.style.overflow = previousHtmlOverflow;
+  };
+}
+
 function ImageTile({ item, className = "", caption = true }: { item: Artwork; className?: string; caption?: boolean }) {
   return (
     <figure className={"group relative overflow-hidden " + className}>
@@ -81,14 +101,10 @@ function HomePage() {
   useEffect(() => {
     if (!activeItem) return;
 
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+    const unlockDocumentScroll = lockDocumentScroll();
 
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
+      unlockDocumentScroll();
     };
   }, [activeItem]);
 
@@ -260,10 +276,7 @@ function DarkPortfolioPage() {
   useEffect(() => {
     if (!activeItem) return;
 
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+    const unlockDocumentScroll = lockDocumentScroll();
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -282,8 +295,7 @@ function DarkPortfolioPage() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
+      unlockDocumentScroll();
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeItem]);
@@ -613,7 +625,8 @@ function StyleBlock() {
     <style>{`
       .journey-title, .display-serif { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
       .display-serif { letter-spacing: -0.035em; }
-      .dark-portfolio-root { background: #080806; overscroll-behavior: none; }
+      .dark-portfolio-root { background: #080806; overscroll-behavior: none; scrollbar-width: none; }
+      .dark-portfolio-root::-webkit-scrollbar { display: none; }
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
