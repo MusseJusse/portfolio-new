@@ -227,7 +227,7 @@ function DarkPortfolioPage() {
             <h1 className="display-serif mt-7 text-[clamp(4rem,12vw,12rem)] leading-[0.78]">Ink, bloom, omen.</h1>
           </div>
           <div className="grid gap-5 self-end md:grid-cols-3">
-            {[artwork[12], artwork[16], artwork[28]].map((item) => (
+            {[artwork[23], artwork[26], artwork[29]].map((item) => (
               <WorkImage key={item.id} item={item} className="h-[44vh] rounded-[8px] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.45)]" caption />
             ))}
           </div>
