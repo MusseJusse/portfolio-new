@@ -405,21 +405,21 @@ function DarkPortfolioPage() {
               </button>
             </header>
             <div
-              className="relative grid min-h-0 w-full touch-pan-y place-items-center overflow-hidden px-8 py-12 md:px-20"
+              className="relative grid min-h-0 w-full touch-pan-y place-items-center overflow-y-auto overflow-x-hidden py-12 md:overflow-hidden md:px-20"
               onClick={closeLightboxFromBackdrop}
               onTouchStart={handleLightboxTouchStart}
               onTouchEnd={handleLightboxTouchEnd}
             >
               <img
                 alt={activeItem.alt}
-                className="lightbox-image relative z-10 max-h-[86dvh] max-w-full cursor-default rounded-[2px] object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] ring-1 ring-white/10"
+                className="lightbox-image relative z-10 h-auto w-full cursor-default rounded-[2px] object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] ring-1 ring-white/10 md:max-h-[86dvh] md:w-auto md:max-w-full"
                 src={activeItem.src}
                 onClick={(event) => event.stopPropagation()}
               />
             </div>
             <button
               aria-label="Show previous image"
-              className="tap-target group absolute bottom-[-1rem] left-[-0.75rem] top-[-1rem] z-20 grid w-[calc(5rem+0.75rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:left-[-2rem] md:w-[calc(9rem+2rem)]"
+              className="tap-target group absolute bottom-[-1rem] left-[-2rem] top-[-1rem] z-20 hidden w-[calc(9rem+2rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:grid"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
@@ -432,7 +432,7 @@ function DarkPortfolioPage() {
             </button>
             <button
               aria-label="Show next image"
-              className="tap-target group absolute bottom-[-1rem] right-[-0.75rem] top-[-1rem] z-20 grid w-[calc(5rem+0.75rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:right-[-2rem] md:w-[calc(9rem+2rem)]"
+              className="tap-target group absolute bottom-[-1rem] right-[-2rem] top-[-1rem] z-20 hidden w-[calc(9rem+2rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:grid"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
