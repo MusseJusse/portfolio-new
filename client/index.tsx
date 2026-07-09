@@ -419,7 +419,7 @@ function DarkPortfolioPage() {
             </div>
             <button
               aria-label="Show previous image"
-              className="tap-target group absolute bottom-[-1rem] left-[-2rem] top-[-1rem] z-20 hidden w-[calc(9rem+2rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:grid"
+              className="tap-target group absolute left-2 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:bottom-[-1rem] md:left-[-2rem] md:top-[-1rem] md:h-auto md:w-[calc(9rem+2rem)] md:translate-y-0"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
@@ -432,7 +432,7 @@ function DarkPortfolioPage() {
             </button>
             <button
               aria-label="Show next image"
-              className="tap-target group absolute bottom-[-1rem] right-[-2rem] top-[-1rem] z-20 hidden w-[calc(9rem+2rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:grid"
+              className="tap-target group absolute right-2 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:bottom-[-1rem] md:right-[-2rem] md:top-[-1rem] md:h-auto md:w-[calc(9rem+2rem)] md:translate-y-0"
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
