@@ -525,14 +525,14 @@ function DarkPortfolioPage() {
       </section>
       {activeItem ? (
         <div
-          className="lightbox-enter fixed inset-0 z-50 grid cursor-grab bg-[#0a0a08]/72 px-3 py-4 text-[#f7f0df] backdrop-blur-[2px] md:px-8"
+          className="lightbox-enter fixed inset-0 z-50 grid cursor-grab bg-[#0a0a08]/72 text-[#f7f0df] backdrop-blur-[2px] md:px-8 md:py-4"
           role="dialog"
           aria-modal="true"
           aria-label={"Full image of " + activeItem.title}
           onClick={closeLightboxFromBackdrop}
         >
-          <div className="relative mx-auto grid h-[calc(100dvh-2rem)] w-full max-w-[1500px] place-items-center">
-            <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-4">
+          <div className="relative mx-auto grid h-dvh w-full max-w-[1500px] place-items-center md:h-[calc(100dvh-2rem)]">
+            <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-4 p-3 md:p-0">
               <div className="pointer-events-auto px-1 py-1 text-sm font-semibold tabular-nums text-[#f7f0df] drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:text-base">
                 {(activeItemIndex ?? 0) + 1}/{selectedSet.items.length}
               </div>
