@@ -326,6 +326,15 @@ function DarkPortfolioPage() {
     }
   }
 
+  function closeLightboxFromBackdrop() {
+    if (ignoreNextClickRef.current) {
+      ignoreNextClickRef.current = false;
+      return;
+    }
+
+    setActiveItemIndex(null);
+  }
+
   return (
     <main className="min-h-screen bg-[#080806] text-[#f7f0df]">
       <StyleBlock />
@@ -370,71 +379,79 @@ function DarkPortfolioPage() {
       </section>
       {activeItem ? (
         <div
-          className="lightbox-enter fixed inset-0 z-50 grid bg-[#080806]/94 px-4 py-5 text-[#f7f0df] backdrop-blur-md md:px-8"
+          className="lightbox-enter fixed inset-0 z-50 grid cursor-grab bg-[#0a0a08]/72 px-3 py-4 text-[#f7f0df] backdrop-blur-[2px] md:px-8"
           role="dialog"
           aria-modal="true"
           aria-label={"Full image of " + activeItem.title}
-          onClick={() => {
-            if (ignoreNextClickRef.current) {
-              ignoreNextClickRef.current = false;
-              return;
-            }
-
-            setActiveItemIndex(null);
-          }}
+          onClick={closeLightboxFromBackdrop}
         >
-          <div className="mx-auto grid h-[calc(100dvh-2.5rem)] w-full max-w-[1280px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4">
-            <header className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">{selectedSet.label} / {(activeItemIndex ?? 0) + 1} / {selectedSet.items.length}</p>
-                <h2 className="mt-1 text-xl font-semibold">{activeItem.title}</h2>
+          <div className="relative mx-auto grid h-[calc(100dvh-2rem)] w-full max-w-[1500px] place-items-center">
+            <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-4">
+              <div className="pointer-events-auto rounded-full bg-black/35 px-3 py-2 text-xs font-semibold tabular-nums text-[#f7f0df]/80 shadow-[0_10px_40px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-md md:px-4">
+                {(activeItemIndex ?? 0) + 1} / {selectedSet.items.length}
               </div>
               <button
-                className="tap-target rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] transition hover:bg-[#f7f0df] hover:text-[#080806] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.97]"
+                aria-label="Close image"
+                className="pointer-events-auto tap-target grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-black/35 text-[#f7f0df]/85 shadow-[0_10px_40px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-md transition-[background-color,color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#f7f0df] hover:text-[#080806] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.94]"
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
                   setActiveItemIndex(null);
                 }}
               >
-                Close
+                <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
               </button>
             </header>
             <div
-              className="grid min-h-0 touch-pan-y place-items-center overflow-hidden"
-              onClick={(event) => event.stopPropagation()}
+              className="relative grid min-h-0 w-full touch-pan-y place-items-center overflow-hidden px-8 py-12 md:px-20"
+              onClick={closeLightboxFromBackdrop}
               onTouchStart={handleLightboxTouchStart}
               onTouchEnd={handleLightboxTouchEnd}
             >
               <img
                 alt={activeItem.alt}
-                className="max-h-[78vh] max-w-full rounded-[8px] object-contain shadow-[0_32px_110px_rgba(0,0,0,0.58)]"
+                className="lightbox-image relative z-10 max-h-[86dvh] max-w-full cursor-default rounded-[2px] object-contain shadow-[0_42px_140px_rgba(0,0,0,0.7)] ring-1 ring-white/10"
                 src={activeItem.src}
+                onClick={(event) => event.stopPropagation()}
               />
             </div>
-            <footer className="grid shrink-0 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
-              <p className="text-sm text-[#e9d2a9]">{activeItem.medium}</p>
-              <div className="flex items-center justify-center gap-3" onClick={(event) => event.stopPropagation()}>
-                <button
-                  className="tap-target rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] transition hover:bg-[#f7f0df] hover:text-[#080806] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.97]"
-                  type="button"
-                  onClick={showPrevious}
-                >
-                  Previous
-                </button>
-                <button
-                  className="tap-target rounded-full border border-white/25 px-5 py-3 text-sm uppercase tracking-[0.18em] transition hover:bg-[#f7f0df] hover:text-[#080806] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.97]"
-                  type="button"
-                  onClick={showNext}
-                >
-                  Next
-                </button>
-              </div>
-              <div className="hidden justify-end gap-2 md:flex" onClick={(event) => event.stopPropagation()}>
+            <button
+              aria-label="Show previous image"
+              className="tap-target group absolute bottom-[-1rem] left-[-0.75rem] top-[-1rem] z-20 grid w-[calc(5rem+0.75rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:left-[-2rem] md:w-[calc(9rem+2rem)]"
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                showPrevious();
+              }}
+            >
+              <svg aria-hidden="true" className="h-9 w-9 rounded-full bg-black/10 p-1 transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-black/35 group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
+                <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button
+              aria-label="Show next image"
+              className="tap-target group absolute bottom-[-1rem] right-[-0.75rem] top-[-1rem] z-20 grid w-[calc(5rem+0.75rem)] cursor-pointer place-items-center text-[#f7f0df]/80 transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:text-[#f7f0df] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f7f0df] md:right-[-2rem] md:w-[calc(9rem+2rem)]"
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                showNext();
+              }}
+            >
+              <svg aria-hidden="true" className="h-9 w-9 rounded-full bg-black/10 p-1 transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:bg-black/35 group-active:scale-[0.9]" viewBox="0 0 24 24" fill="none">
+                <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <footer className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-12">
+              <div className="pointer-events-auto hidden max-w-full cursor-default items-center gap-2 overflow-x-auto rounded-full bg-black/35 px-3 py-2 shadow-[0_12px_46px_rgba(0,0,0,0.35)] ring-1 ring-white/10 backdrop-blur-md md:flex" onClick={(event) => event.stopPropagation()}>
                 {selectedSet.items.map((item, index) => (
                   <button
                     aria-label={"Show " + item.title}
-                    className={"tap-target h-12 w-10 overflow-hidden rounded-[3px] border transition " + (index === activeItemIndex ? "border-[#f7f0df]" : "border-white/20 opacity-60 hover:opacity-100")}
+                    className={cx(
+                      "tap-target h-11 w-9 shrink-0 overflow-hidden rounded-[3px] transition-[opacity,transform,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.94]",
+                      index === activeItemIndex ? "opacity-100 shadow-[0_0_0_2px_#f7f0df]" : "opacity-45 hover:opacity-85"
+                    )}
                     key={item.id}
                     type="button"
                     onClick={() => setActiveItemIndex(index)}
@@ -461,7 +478,7 @@ function StyleBlock() {
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
         .lightbox-enter { animation: lightbox-fade 180ms cubic-bezier(0.23, 1, 0.32, 1); }
-        .lightbox-enter img { animation: lightbox-image 220ms cubic-bezier(0.23, 1, 0.32, 1); }
+        .lightbox-image { animation: lightbox-image 240ms cubic-bezier(0.23, 1, 0.32, 1); }
       }
       @keyframes lightbox-fade {
         from { opacity: 0; }
