@@ -215,6 +215,32 @@ function HomePage() {
 }
 
 function DarkPortfolioPage() {
+  const featuredItems = [artwork[23], artwork[26], artwork[29]];
+  const [activeItem, setActiveItem] = useState<Artwork | null>(null);
+
+  useEffect(() => {
+    if (!activeItem) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setActiveItem(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeItem]);
+
   return (
     <main className="min-h-screen bg-[#080806] text-[#f7f0df]">
       <StyleBlock />
@@ -227,8 +253,16 @@ function DarkPortfolioPage() {
             <h1 className="display-serif mt-7 text-[clamp(4rem,12vw,12rem)] leading-[0.78]">Ink, bloom, omen.</h1>
           </div>
           <div className="grid gap-5 self-end md:grid-cols-3">
-            {[artwork[23], artwork[26], artwork[29]].map((item) => (
-              <WorkImage key={item.id} item={item} className="h-[44vh] rounded-[8px] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.45)]" caption />
+            {featuredItems.map((item) => (
+              <button
+                aria-label={"View full image of " + item.title}
+                className="tap-target block cursor-zoom-in overflow-hidden rounded-[8px] border border-white/10 text-left shadow-[0_30px_90px_rgba(0,0,0,0.45)] transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#e6bd78] focus:ring-offset-4 focus:ring-offset-[#080806] active:scale-[0.985]"
+                key={item.id}
+                type="button"
+                onClick={() => setActiveItem(item)}
+              >
+                <WorkImage item={item} className="h-[44vh]" caption />
+              </button>
             ))}
           </div>
         </div>
@@ -241,6 +275,42 @@ function DarkPortfolioPage() {
           </article>
         ))}
       </section>
+      {activeItem ? (
+        <div
+          className="lightbox-enter fixed inset-0 z-50 grid bg-[#080806]/94 px-4 py-5 text-[#f7f0df] backdrop-blur-md md:px-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={"Full image of " + activeItem.title}
+          onClick={() => setActiveItem(null)}
+        >
+          <div className="mx-auto grid h-[calc(100dvh-2.5rem)] w-full max-w-[1280px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4">
+            <header className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-[#e6bd78]">Selected work</p>
+                <h2 className="mt-1 text-xl font-semibold">{activeItem.title}</h2>
+              </div>
+              <button
+                className="tap-target rounded-full border border-white/25 px-4 py-2 text-sm uppercase tracking-[0.18em] transition hover:bg-[#f7f0df] hover:text-[#080806] focus:outline-none focus:ring-2 focus:ring-[#f7f0df] active:scale-[0.97]"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActiveItem(null);
+                }}
+              >
+                Close
+              </button>
+            </header>
+            <div className="grid min-h-0 place-items-center overflow-hidden" onClick={(event) => event.stopPropagation()}>
+              <img
+                alt={activeItem.alt}
+                className="max-h-[78vh] max-w-full rounded-[8px] object-contain shadow-[0_32px_110px_rgba(0,0,0,0.58)]"
+                src={activeItem.src}
+              />
+            </div>
+            <footer className="text-sm text-[#e9d2a9]">{activeItem.medium}</footer>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
@@ -253,6 +323,16 @@ function StyleBlock() {
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
+        .lightbox-enter { animation: lightbox-fade 180ms cubic-bezier(0.23, 1, 0.32, 1); }
+        .lightbox-enter img { animation: lightbox-image 220ms cubic-bezier(0.23, 1, 0.32, 1); }
+      }
+      @keyframes lightbox-fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes lightbox-image {
+        from { opacity: 0; transform: scale(0.96); }
+        to { opacity: 1; transform: scale(1); }
       }
     `}</style>
   );
