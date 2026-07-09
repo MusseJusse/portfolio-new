@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 
 type ArtworkCollection = {
@@ -222,6 +222,8 @@ function DarkPortfolioPage() {
   const featuredItems = [artwork[23], artwork[26], artwork[29]];
   const [selectedSetIndex, setSelectedSetIndex] = useState(0);
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const ignoreNextClickRef = useRef(false);
   const selectedSet = sets[selectedSetIndex];
   const activeItem = activeItemIndex === null ? null : selectedSet.items[activeItemIndex];
 
@@ -284,6 +286,36 @@ function DarkPortfolioPage() {
     setActiveItemIndex(0);
   }
 
+  function handleLightboxTouchStart(event: TouchEvent) {
+    const touch = event.touches[0];
+    if (!touch) return;
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  }
+
+  function handleLightboxTouchEnd(event: TouchEvent) {
+    const start = touchStartRef.current;
+    const touch = event.changedTouches[0];
+    touchStartRef.current = null;
+
+    if (!start || !touch) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const isHorizontalSwipe = Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4;
+
+    if (!isHorizontalSwipe) return;
+
+    ignoreNextClickRef.current = true;
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (deltaX < 0) {
+      showNext();
+    } else {
+      showPrevious();
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#080806] text-[#f7f0df]">
       <StyleBlock />
@@ -332,7 +364,14 @@ function DarkPortfolioPage() {
           role="dialog"
           aria-modal="true"
           aria-label={"Full image of " + activeItem.title}
-          onClick={() => setActiveItemIndex(null)}
+          onClick={() => {
+            if (ignoreNextClickRef.current) {
+              ignoreNextClickRef.current = false;
+              return;
+            }
+
+            setActiveItemIndex(null);
+          }}
         >
           <div className="mx-auto grid h-[calc(100dvh-2.5rem)] w-full max-w-[1280px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4">
             <header className="flex items-center justify-between gap-4">
@@ -351,7 +390,12 @@ function DarkPortfolioPage() {
                 Close
               </button>
             </header>
-            <div className="grid min-h-0 place-items-center overflow-hidden" onClick={(event) => event.stopPropagation()}>
+            <div
+              className="grid min-h-0 touch-pan-y place-items-center overflow-hidden"
+              onClick={(event) => event.stopPropagation()}
+              onTouchStart={handleLightboxTouchStart}
+              onTouchEnd={handleLightboxTouchEnd}
+            >
               <img
                 alt={activeItem.alt}
                 className="max-h-[78vh] max-w-full rounded-[8px] object-contain shadow-[0_32px_110px_rgba(0,0,0,0.58)]"
