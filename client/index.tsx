@@ -835,7 +835,7 @@ function StyleBlock() {
       .sonia-socials a, .sonia-socials span { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
       .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
       .sonia-socials svg { width: 19px; height: 19px; }
-      .sonia-brand { position: absolute; top: 37px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
+      .sonia-brand { position: absolute; top: 49px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
       .sonia-brand-mark { display: flex; min-width: 230px; flex-direction: column; align-items: center; color: #151515; text-decoration: none; }
       .sonia-brand-image { position: relative; display: block; width: 144px; height: 144px; overflow: hidden; border: 0; border-radius: 999px; }
       .sonia-brand-image img { position: absolute; top: -1px; left: 50%; width: 154%; max-width: none; height: auto; transform: translateX(-50%); }
@@ -848,7 +848,7 @@ function StyleBlock() {
       .sonia-main-nav a { color: #303030; text-decoration: none; }
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
-      .sonia-gallery { display: grid; grid-template-columns: 1fr; gap: 38px 20px; padding: 64px 4.05% 86px; }
+      .sonia-gallery { display: grid; grid-template-columns: 1fr; gap: 38px 20px; padding: 92px 4.05% 86px; }
       .sonia-gallery-item { margin: 0; }
       .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #f2f0ec; cursor: zoom-in; }
       .sonia-gallery-item img { display: block; width: 100%; aspect-ratio: 0.71; object-fit: cover; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
@@ -873,9 +873,9 @@ function StyleBlock() {
       @media (min-width: 1200px) { .sonia-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
       @media (min-width: 1800px) { .sonia-gallery { grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 17px; } }
       @media (max-width: 640px) {
-        .sonia-header { min-height: 340px; }
-        .sonia-socials { top: 268px; left: 50%; transform: translateX(-50%); }
-        .sonia-brand { top: 30px; }
+        .sonia-header { min-height: 368px; }
+        .sonia-socials { top: 316px; left: 50%; transform: translateX(-50%); }
+        .sonia-brand { top: 42px; }
         .sonia-gallery { padding-top: 32px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
