@@ -684,7 +684,7 @@ function SoniaInspiredPage() {
     <main id="top" className="min-h-screen bg-white text-[#191919]">
       <StyleBlock />
       <header className="sonia-header relative" aria-label="Primary">
-        <nav className="sonia-socials" aria-label="Social links">
+        <div className="sonia-socials" role="group" aria-label="Social links">
           <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
               <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
@@ -692,24 +692,23 @@ function SoniaInspiredPage() {
               <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
             </svg>
           </a>
-          <a href="#work" aria-label="Jump to the artwork gallery">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-              <path d="M5 5h6v6H5V5Zm8 0h6v6h-6V5ZM5 13h6v6H5v-6Zm8 0h6v6h-6v-6Z" stroke="currentColor" stroke-width="1.7" />
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M21.7 7.1c.02.22.02.45.02.67 0 6.85-5.22 14.75-14.75 14.75-2.93 0-5.66-.85-7.96-2.34.42.05.82.07 1.25.07 2.42 0 4.64-.82 6.42-2.22a5.2 5.2 0 0 1-4.84-3.6c.32.05.65.08.98.08.47 0 .94-.07 1.38-.18A5.18 5.18 0 0 1 .05 9.25v-.06c.7.4 1.52.65 2.4.68A5.18 5.18 0 0 1 .84 2.95a14.7 14.7 0 0 0 10.68 5.42 5.84 5.84 0 0 1-.13-1.18A5.18 5.18 0 0 1 20.35 3.65a10.2 10.2 0 0 0 3.28-1.25 5.16 5.16 0 0 1-2.28 2.85 10.3 10.3 0 0 0 2.98-.8 11.1 11.1 0 0 1-2.63 2.65Z" fill="currentColor" />
             </svg>
-          </a>
-          <a href="#about" aria-label="Jump to artist information">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="3.25" stroke="currentColor" stroke-width="1.7" />
-              <path d="M5.5 19c.9-3.2 3-4.8 6.5-4.8s5.6 1.6 6.5 4.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </span>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M13.6 22v-9h3l.45-3.5H13.6V7.27c0-1.01.28-1.7 1.73-1.7h1.84V2.44c-.32-.04-1.41-.14-2.69-.14-2.66 0-4.48 1.62-4.48 4.6v2.58H7v3.5h3v9h3.6Z" fill="currentColor" />
             </svg>
-          </a>
-          <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Book through Inkdependent Studio">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+          </span>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
               <rect x="3.5" y="5.5" width="17" height="13" rx="1" stroke="currentColor" stroke-width="1.7" />
               <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
             </svg>
-          </a>
-        </nav>
+          </span>
+        </div>
 
         <div className="sonia-brand">
           <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
@@ -721,7 +720,7 @@ function SoniaInspiredPage() {
           </a>
           <nav className="sonia-main-nav" aria-label="Portfolio sections">
             <a className="active" href="#work">Illustration</a>
-            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Book</a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Purchase</a>
             <a href="#about">About</a>
           </nav>
         </div>
@@ -790,7 +789,7 @@ function StyleBlock() {
       .sonia-inspired-root { background: #fff; scroll-behavior: smooth; }
       .sonia-header { min-height: 326px; }
       .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
-      .sonia-socials a { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
+      .sonia-socials a, .sonia-socials span { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
       .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
       .sonia-socials svg { width: 19px; height: 19px; }
       .sonia-brand { position: absolute; top: 37px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
