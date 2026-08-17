@@ -1,3 +1,4 @@
+import { Route, Router, Routes } from "lakebed/client";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 
@@ -643,6 +644,14 @@ function SoniaInspiredPage() {
   const placeholderArtwork = artwork[8];
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  function showPrevious() {
+    setActiveIndex((current) => (current === null ? current : (current + soniaInspiredCaptions.length - 1) % soniaInspiredCaptions.length));
+  }
+
+  function showNext() {
+    setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredCaptions.length));
+  }
+
   useEffect(() => {
     document.documentElement.classList.add("sonia-inspired-root");
     document.body.classList.add("sonia-inspired-root");
@@ -660,12 +669,8 @@ function SoniaInspiredPage() {
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setActiveIndex(null);
-      if (event.key === "ArrowLeft") {
-        setActiveIndex((current) => (current === null ? current : (current + soniaInspiredCaptions.length - 1) % soniaInspiredCaptions.length));
-      }
-      if (event.key === "ArrowRight") {
-        setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredCaptions.length));
-      }
+      if (event.key === "ArrowLeft") showPrevious();
+      if (event.key === "ArrowRight") showNext();
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -749,7 +754,7 @@ function SoniaInspiredPage() {
             aria-label="Show previous image"
             onClick={(event) => {
               event.stopPropagation();
-              setActiveIndex((activeIndex + soniaInspiredCaptions.length - 1) % soniaInspiredCaptions.length);
+              showPrevious();
             }}
           >
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m15 4-8 8 8 8" stroke="currentColor" stroke-width="1.5" /></svg>
@@ -764,7 +769,7 @@ function SoniaInspiredPage() {
             aria-label="Show next image"
             onClick={(event) => {
               event.stopPropagation();
-              setActiveIndex((activeIndex + 1) % soniaInspiredCaptions.length);
+              showNext();
             }}
           >
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 4 8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
@@ -858,7 +863,13 @@ function StyleBlock() {
 }
 
 export function App() {
-  if (window.location.pathname === "/2") return <DarkPortfolioPage />;
-  if (window.location.pathname === "/3") return <SoniaInspiredPage />;
-  return <HomePage />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/2" element={<DarkPortfolioPage />} />
+        <Route path="/3" element={<SoniaInspiredPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </Router>
+  );
 }
