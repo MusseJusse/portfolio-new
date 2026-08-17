@@ -804,12 +804,12 @@ function StyleBlock() {
       .sonia-brand-mark { display: flex; min-width: 230px; flex-direction: column; align-items: center; color: #151515; text-decoration: none; }
       .sonia-brand-image { display: block; width: 108px; height: 108px; overflow: hidden; border: 3px solid #a64d49; border-radius: 999px; box-shadow: 0 0 0 5px #fff, 0 0 0 6px rgba(166,77,73,.35); }
       .sonia-brand-image img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.22); }
-      .sonia-brand-name { position: relative; margin-top: 12px; font-family: "halyard-display", sans-serif; font-size: 27px; font-weight: 300; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
+      .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
       .sonia-brand-name::before, .sonia-brand-name::after { position: absolute; top: -2px; height: 34px; width: 8px; border-top: 2px solid #b85854; border-bottom: 2px solid #b85854; content: ""; }
       .sonia-brand-name::before { left: -16px; border-left: 2px solid #b85854; }
       .sonia-brand-name::after { right: -12px; border-right: 2px solid #b85854; }
       .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
-      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-family: "halyard-display", sans-serif; font-size: 13px; font-weight: 300; }
+      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 13px; }
       .sonia-main-nav a { color: #303030; text-decoration: none; }
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
@@ -819,13 +819,13 @@ function StyleBlock() {
       .sonia-gallery-item img { display: block; width: 100%; aspect-ratio: 0.71; object-fit: cover; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
       .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
       .sonia-gallery-item button:focus-visible { outline: 2px solid #a64d49; outline-offset: 4px; }
-      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-family: "halyard-display", sans-serif; font-size: 11px; font-weight: 300; line-height: 1.45; }
-      .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-family: "halyard-display", sans-serif; font-size: 12px; font-weight: 300; line-height: 1.7; }
+      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-size: 11px; line-height: 1.45; }
+      .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
       .sonia-footer a { color: inherit; text-underline-offset: 4px; }
       .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
       .sonia-lightbox figure { display: grid; max-height: 100%; margin: 0; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; cursor: default; }
       .sonia-lightbox figure img { max-width: min(76vw, 860px); max-height: calc(100dvh - 108px); object-fit: contain; }
-      .sonia-lightbox figcaption { color: #333; font-family: "halyard-display", sans-serif; font-size: 12px; font-weight: 300; text-align: center; }
+      .sonia-lightbox figcaption { color: #333; font-size: 12px; text-align: center; }
       .sonia-lightbox-close, .sonia-lightbox-arrow { position: absolute; display: grid; width: 44px; height: 44px; place-items: center; border: 0; background: transparent; color: #222; cursor: pointer; }
       .sonia-lightbox-close { top: 22px; right: 24px; }
       .sonia-lightbox-arrow { top: 50%; transform: translateY(-50%); }
