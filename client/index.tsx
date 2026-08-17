@@ -809,7 +809,7 @@ function StyleBlock() {
       .sonia-brand-name::before { left: -16px; border-left: 2px solid #b85854; }
       .sonia-brand-name::after { right: -12px; border-right: 2px solid #b85854; }
       .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
-      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 15px; }
+      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
       .sonia-main-nav a { color: #303030; text-decoration: none; }
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
@@ -819,7 +819,7 @@ function StyleBlock() {
       .sonia-gallery-item img { display: block; width: 100%; aspect-ratio: 0.71; object-fit: cover; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
       .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
       .sonia-gallery-item button:focus-visible { outline: 2px solid #a64d49; outline-offset: 4px; }
-      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-size: 16px; line-height: 1.45; }
+      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-size: 15px; line-height: 1.45; }
       .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
       .sonia-footer a { color: inherit; text-underline-offset: 4px; }
       .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
