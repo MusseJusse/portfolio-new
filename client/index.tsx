@@ -678,6 +678,8 @@ const soniaLaiLogoSource = "https://images.squarespace-cdn.com/content/v1/65221e
 
 function SoniaInspiredPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
 
   function showPrevious() {
     setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
@@ -715,10 +717,48 @@ function SoniaInspiredPage() {
     };
   }, [activeIndex]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const unlockDocumentScroll = lockDocumentScroll();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+
+      setMobileMenuOpen(false);
+      mobileMenuButtonRef.current?.focus();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      unlockDocumentScroll();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
+
   return (
     <main id="top" className="min-h-screen bg-white text-[#191919]">
       <StyleBlock />
       <header className="sonia-header relative" aria-label="Primary">
+        <button
+          ref={mobileMenuButtonRef}
+          className={cx("sonia-menu-button", mobileMenuOpen && "is-open")}
+          type="button"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="sonia-mobile-menu"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
         <div className="sonia-socials" role="group" aria-label="Social links">
           <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
@@ -758,6 +798,36 @@ function SoniaInspiredPage() {
             <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Purchase</a>
             <a href="#about">About</a>
           </nav>
+        </div>
+
+        <div
+          id="sonia-mobile-menu"
+          className={cx("sonia-mobile-menu", mobileMenuOpen && "is-open")}
+          role="dialog"
+          aria-modal={mobileMenuOpen}
+          aria-hidden={!mobileMenuOpen}
+          aria-label="Site menu"
+        >
+          <nav className="sonia-mobile-nav" aria-label="Portfolio sections">
+            <a className="active" href="#work" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Illustration</a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Purchase</a>
+            <a href="#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>About</a>
+          </nav>
+          <div className="sonia-mobile-socials" role="group" aria-label="Social links">
+            <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on Instagram" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+              </svg>
+            </a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Inkdependent Studio" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+              </svg>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -831,6 +901,7 @@ function StyleBlock() {
       .dark-portfolio-root::-webkit-scrollbar { display: none; }
       .sonia-inspired-root { background: #fff; font-family: "halyard-display", sans-serif; font-weight: 300; scroll-behavior: smooth; }
       .sonia-header { min-height: 326px; }
+      .sonia-menu-button, .sonia-mobile-menu { display: none; }
       .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
       .sonia-socials a, .sonia-socials span { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
       .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
@@ -873,10 +944,112 @@ function StyleBlock() {
       @media (min-width: 1200px) { .sonia-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
       @media (min-width: 1800px) { .sonia-gallery { grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 17px; } }
       @media (max-width: 640px) {
-        .sonia-header { min-height: 368px; }
-        .sonia-socials { top: 316px; left: 50%; transform: translateX(-50%); }
-        .sonia-brand { top: 42px; }
-        .sonia-gallery { padding-top: 32px; }
+        .sonia-header { min-height: 232px; }
+        .sonia-brand { z-index: 90; top: 30px; }
+        .sonia-brand-image { width: 92px; height: 92px; }
+        .sonia-brand-name { margin-top: 10px; font-size: 24px; }
+        .sonia-brand-name::before, .sonia-brand-name::after { height: 31px; }
+        .sonia-socials, .sonia-main-nav { display: none; }
+        .sonia-menu-button {
+          position: absolute;
+          z-index: 100;
+          top: 59px;
+          left: 19px;
+          display: grid;
+          width: 52px;
+          height: 52px;
+          place-content: center;
+          gap: 6px;
+          border: 0;
+          padding: 0;
+          background: transparent;
+          color: #191919;
+          cursor: pointer;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .sonia-menu-button span {
+          display: block;
+          width: 34px;
+          height: 1px;
+          background: currentColor;
+          transform-origin: center;
+          transition: transform 380ms cubic-bezier(.65,0,.35,1), opacity 240ms ease-in-out;
+        }
+        .sonia-menu-button.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .sonia-menu-button.is-open span:nth-child(2) { opacity: 0; }
+        .sonia-menu-button.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .sonia-menu-button.is-open { position: fixed; }
+        .sonia-menu-button:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
+        .sonia-mobile-menu {
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          display: grid;
+          min-height: 100dvh;
+          grid-template-rows: 1fr auto 1fr;
+          background: #fff;
+          color: #191919;
+          opacity: 0;
+          pointer-events: none;
+          transform: scale(.985);
+          transform-origin: 46px 85px;
+          visibility: hidden;
+          will-change: opacity, transform;
+          transition:
+            opacity 380ms cubic-bezier(.65,0,.35,1),
+            transform 380ms cubic-bezier(.65,0,.35,1),
+            visibility 0s linear 380ms;
+        }
+        .sonia-mobile-menu.is-open {
+          opacity: 1;
+          pointer-events: auto;
+          transform: scale(1);
+          visibility: visible;
+          transition-delay: 0s;
+        }
+        .sonia-mobile-nav {
+          align-self: center;
+          grid-row: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 17px;
+          padding-top: 36px;
+          font-size: clamp(1.9rem, 8vw, 2.2rem);
+          line-height: 1.18;
+          letter-spacing: -.025em;
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 380ms cubic-bezier(.65,0,.35,1), transform 380ms cubic-bezier(.65,0,.35,1);
+        }
+        .sonia-mobile-menu.is-open .sonia-mobile-nav { opacity: 1; transform: translateY(0); transition-delay: 45ms; }
+        .sonia-mobile-nav a { color: inherit; text-decoration: none; }
+        .sonia-mobile-nav a:active { transform: scale(.97); }
+        .sonia-mobile-nav a:focus-visible { outline: 2px solid #a64d49; outline-offset: 6px; }
+        .sonia-mobile-socials {
+          align-self: end;
+          grid-row: 3;
+          display: flex;
+          justify-content: center;
+          gap: 21px;
+          padding-bottom: max(34px, env(safe-area-inset-bottom));
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 380ms cubic-bezier(.65,0,.35,1), transform 380ms cubic-bezier(.65,0,.35,1);
+        }
+        .sonia-mobile-menu.is-open .sonia-mobile-socials { opacity: 1; transform: translateY(0); transition-delay: 45ms; }
+        .sonia-mobile-socials a {
+          display: grid;
+          width: 44px;
+          height: 44px;
+          place-items: center;
+          color: inherit;
+        }
+        .sonia-mobile-socials svg { width: 23px; height: 23px; }
+        .sonia-mobile-socials a:active { transform: scale(.92); }
+        .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
+        .sonia-gallery { padding-top: 10px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
         .sonia-lightbox figure img { max-width: calc(100vw - 84px); }
@@ -899,6 +1072,15 @@ function StyleBlock() {
       @keyframes sonia-lightbox-in {
         from { opacity: 0; }
         to { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sonia-menu-button span { transition: none; }
+        .sonia-mobile-menu { transform: none; transition: opacity 160ms linear, visibility 0s linear 160ms; }
+        .sonia-mobile-menu.is-open { transition-delay: 0s; }
+        .sonia-mobile-nav, .sonia-mobile-socials { transform: none; transition: opacity 160ms linear; }
+      }
+      @media (prefers-reduced-transparency: reduce) {
+        .sonia-mobile-menu { background: #fff; }
       }
     `}</style>
   );
