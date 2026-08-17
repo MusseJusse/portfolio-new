@@ -621,35 +621,68 @@ function DarkPortfolioPage() {
   );
 }
 
-const soniaInspiredCaptions = [
-  "Iris & Daffodil",
-  "The Garden Study",
-  "Red Admiral",
-  "Blue Iris",
-  "Spring Arrangement",
-  "After the Rain",
-  "Botanical No. 01",
-  "Wildflower Study",
-  "Native Garden",
-  "Daffodil Season",
-  "The Collector",
-  "Botanical No. 02",
-  "Aotearoa to Edinburgh",
-  "Painted Wings",
-  "Yellow & Blue",
-  "In Bloom"
+const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string }> = [
+  { fileName: "6a16b8a0-2e16-4a29-acef-b7bcdb21793b.webp", title: "Iris & Daffodil" },
+  { fileName: "f4442278-45fe-42f2-9c98-d375f6682306.webp", title: "The Garden Study" },
+  { fileName: "f8069b52-e182-49a8-b3f7-c87e710c9f29.webp", title: "Red Admiral" },
+  { fileName: "img_0502.webp", title: "Blue Iris" },
+  { fileName: "img_0545.webp", title: "Spring Arrangement" },
+  { fileName: "img_0723.webp", title: "After the Rain" },
+  { fileName: "img_0745.webp", title: "Botanical No. 01" },
+  { fileName: "img_1124.webp", title: "Wildflower Study" },
+  { fileName: "img_1128.webp", title: "Native Garden" },
+  { fileName: "img_1129.webp", title: "Daffodil Season" },
+  { fileName: "img_1137.webp", title: "The Collector" },
+  { fileName: "img_1140.webp", title: "Botanical No. 02" },
+  { fileName: "img_1220.webp", title: "Aotearoa to Edinburgh" },
+  { fileName: "img_1356.webp", title: "Painted Wings" },
+  { fileName: "img_1588.webp", title: "Yellow & Blue" },
+  { fileName: "img_1589.webp", title: "In Bloom" },
+  { fileName: "img_2233.webp" },
+  { fileName: "img_2522.webp" },
+  { fileName: "img_2526.webp" },
+  { fileName: "img_3112.webp" },
+  { fileName: "img_3531.webp" },
+  { fileName: "img_3554.webp" },
+  { fileName: "img_3709.webp" },
+  { fileName: "img_4334.webp" },
+  { fileName: "img_5793.webp" },
+  { fileName: "img_5794.webp" },
+  { fileName: "img_5798.webp" },
+  { fileName: "img_5804.webp" },
+  { fileName: "img_6601.webp" },
+  { fileName: "img_7731.webp" },
+  { fileName: "img_7733.webp" },
+  { fileName: "img_7737.webp" },
+  { fileName: "img_7740.webp" },
+  { fileName: "img_7743.webp" },
+  { fileName: "img_7747.webp" },
+  { fileName: "img_7750.webp" },
+  { fileName: "img_7751.webp" },
+  { fileName: "img_7754.webp" },
+  { fileName: "img_7755.webp" },
+  { fileName: "img_7985.webp" },
+  { fileName: "img_8845.webp" },
+  { fileName: "img_8846.webp" },
+  { fileName: "img_9586.webp" },
+  { fileName: "img_9587.webp" }
 ];
 
+const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }, index) => ({
+  fileName,
+  src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/${fileName}`,
+  title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`
+}));
+
 function SoniaInspiredPage() {
-  const placeholderArtwork = artwork[8];
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   function showPrevious() {
-    setActiveIndex((current) => (current === null ? current : (current + soniaInspiredCaptions.length - 1) % soniaInspiredCaptions.length));
+    setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
   }
 
   function showNext() {
-    setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredCaptions.length));
+    setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredArtwork.length));
   }
 
   useEffect(() => {
@@ -713,7 +746,7 @@ function SoniaInspiredPage() {
         <div className="sonia-brand">
           <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
             <span className="sonia-brand-image">
-              <img src={placeholderArtwork.src} alt="" />
+              <img src={soniaInspiredArtwork[0].src} alt="" />
             </span>
             <span className="sonia-brand-name">RUBY SMYTHE</span>
             <span className="sonia-brand-subtitle">tattoo &amp; illustration</span>
@@ -727,12 +760,12 @@ function SoniaInspiredPage() {
       </header>
 
       <section id="work" className="sonia-gallery" aria-label="Selected work">
-        {soniaInspiredCaptions.map((caption, index) => (
-          <figure className="sonia-gallery-item" key={caption}>
-            <button type="button" onClick={() => setActiveIndex(index)} aria-label={`View full image of ${caption}`}>
-              <img src={placeholderArtwork.src} alt={`${caption}, floral painting by Ruby Smythe`} loading={index > 6 ? "lazy" : "eager"} />
+        {soniaInspiredArtwork.map((item, index) => (
+          <figure className="sonia-gallery-item" key={item.fileName}>
+            <button type="button" onClick={() => setActiveIndex(index)} aria-label={`View full image of ${item.title}`}>
+              <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={index > 6 ? "lazy" : "eager"} />
             </button>
-            <figcaption>{caption}</figcaption>
+            <figcaption>{item.title}</figcaption>
           </figure>
         ))}
       </section>
@@ -743,7 +776,7 @@ function SoniaInspiredPage() {
       </footer>
 
       {activeIndex !== null ? (
-        <div className="sonia-lightbox" role="dialog" aria-modal="true" aria-label={`Full image of ${soniaInspiredCaptions[activeIndex]}`} onClick={() => setActiveIndex(null)}>
+        <div className="sonia-lightbox" role="dialog" aria-modal="true" aria-label={`Full image of ${soniaInspiredArtwork[activeIndex].title}`} onClick={() => setActiveIndex(null)}>
           <button className="sonia-lightbox-close" type="button" aria-label="Close full image" onClick={() => setActiveIndex(null)}>
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="1.5" /></svg>
           </button>
@@ -759,8 +792,8 @@ function SoniaInspiredPage() {
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m15 4-8 8 8 8" stroke="currentColor" stroke-width="1.5" /></svg>
           </button>
           <figure onClick={(event) => event.stopPropagation()}>
-            <img src={placeholderArtwork.src} alt={`${soniaInspiredCaptions[activeIndex]}, floral painting by Ruby Smythe`} />
-            <figcaption>{soniaInspiredCaptions[activeIndex]}</figcaption>
+            <img src={soniaInspiredArtwork[activeIndex].src} alt={`${soniaInspiredArtwork[activeIndex].title}, artwork by Ruby Smythe`} />
+            <figcaption>{soniaInspiredArtwork[activeIndex].title}</figcaption>
           </figure>
           <button
             className="sonia-lightbox-arrow sonia-lightbox-next"
