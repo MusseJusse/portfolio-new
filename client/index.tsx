@@ -674,6 +674,8 @@ const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }
   title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`
 }));
 
+const soniaLaiLogoSource = "https://images.squarespace-cdn.com/content/v1/65221e0110672b4d4e420104/2344fd9f-0acd-452e-a3b3-27932a1186d5/E59AE73A-3D3B-446D-A8CA-590CC7EDCB3B.png?format=1500w";
+
 function SoniaInspiredPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -746,7 +748,7 @@ function SoniaInspiredPage() {
         <div className="sonia-brand">
           <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
             <span className="sonia-brand-image">
-              <img src={soniaInspiredArtwork[0].src} alt="" />
+              <img src={soniaLaiLogoSource} alt="" />
             </span>
             <span className="sonia-brand-name">RUBY SMYTHE</span>
             <span className="sonia-brand-subtitle">tattoo &amp; illustration</span>
@@ -835,8 +837,8 @@ function StyleBlock() {
       .sonia-socials svg { width: 19px; height: 19px; }
       .sonia-brand { position: absolute; top: 37px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
       .sonia-brand-mark { display: flex; min-width: 230px; flex-direction: column; align-items: center; color: #151515; text-decoration: none; }
-      .sonia-brand-image { display: block; width: 108px; height: 108px; overflow: hidden; border: 3px solid #a64d49; border-radius: 999px; box-shadow: 0 0 0 5px #fff, 0 0 0 6px rgba(166,77,73,.35); }
-      .sonia-brand-image img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.22); }
+      .sonia-brand-image { position: relative; display: block; width: 108px; height: 108px; overflow: hidden; border: 0; border-radius: 999px; }
+      .sonia-brand-image img { position: absolute; top: -1px; left: 50%; width: 154%; max-width: none; height: auto; transform: translateX(-50%); }
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
       .sonia-brand-name::before, .sonia-brand-name::after { position: absolute; top: -2px; height: 34px; width: 8px; border-top: 2px solid #b85854; border-bottom: 2px solid #b85854; content: ""; }
       .sonia-brand-name::before { left: -16px; border-left: 2px solid #b85854; }
