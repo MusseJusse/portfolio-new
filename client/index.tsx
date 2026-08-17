@@ -1,3 +1,4 @@
+import { Route, Router, Routes } from "lakebed/client";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 
@@ -620,14 +621,441 @@ function DarkPortfolioPage() {
   );
 }
 
+const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string }> = [
+  { fileName: "6a16b8a0-2e16-4a29-acef-b7bcdb21793b.webp", title: "Iris & Daffodil" },
+  { fileName: "f4442278-45fe-42f2-9c98-d375f6682306.webp", title: "The Garden Study" },
+  { fileName: "f8069b52-e182-49a8-b3f7-c87e710c9f29.webp", title: "Red Admiral" },
+  { fileName: "img_0502.webp", title: "Blue Iris" },
+  { fileName: "img_0545.webp", title: "Spring Arrangement" },
+  { fileName: "img_0723.webp", title: "After the Rain" },
+  { fileName: "img_0745.webp", title: "Botanical No. 01" },
+  { fileName: "img_1124.webp", title: "Wildflower Study" },
+  { fileName: "img_1128.webp", title: "Native Garden" },
+  { fileName: "img_1129.webp", title: "Daffodil Season" },
+  { fileName: "img_1137.webp", title: "The Collector" },
+  { fileName: "img_1140.webp", title: "Botanical No. 02" },
+  { fileName: "img_1220.webp", title: "Aotearoa to Edinburgh" },
+  { fileName: "img_1356.webp", title: "Painted Wings" },
+  { fileName: "img_1588.webp", title: "Yellow & Blue" },
+  { fileName: "img_1589.webp", title: "In Bloom" },
+  { fileName: "img_2233.webp" },
+  { fileName: "img_2522.webp" },
+  { fileName: "img_2526.webp" },
+  { fileName: "img_3112.webp" },
+  { fileName: "img_3531.webp" },
+  { fileName: "img_3554.webp" },
+  { fileName: "img_3709.webp" },
+  { fileName: "img_4334.webp" },
+  { fileName: "img_5793.webp" },
+  { fileName: "img_5794.webp" },
+  { fileName: "img_5798.webp" },
+  { fileName: "img_5804.webp" },
+  { fileName: "img_6601.webp" },
+  { fileName: "img_7731.webp" },
+  { fileName: "img_7733.webp" },
+  { fileName: "img_7737.webp" },
+  { fileName: "img_7740.webp" },
+  { fileName: "img_7743.webp" },
+  { fileName: "img_7747.webp" },
+  { fileName: "img_7750.webp" },
+  { fileName: "img_7751.webp" },
+  { fileName: "img_7754.webp" },
+  { fileName: "img_7755.webp" },
+  { fileName: "img_7985.webp" },
+  { fileName: "img_8845.webp" },
+  { fileName: "img_8846.webp" },
+  { fileName: "img_9586.webp" },
+  { fileName: "img_9587.webp" }
+];
+
+const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }, index) => ({
+  fileName,
+  src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/${fileName}`,
+  title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`
+}));
+
+const soniaLaiLogoSource = "https://images.squarespace-cdn.com/content/v1/65221e0110672b4d4e420104/2344fd9f-0acd-452e-a3b3-27932a1186d5/E59AE73A-3D3B-446D-A8CA-590CC7EDCB3B.png?format=1500w";
+
+function SoniaInspiredPage() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  function showPrevious() {
+    setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
+  }
+
+  function showNext() {
+    setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredArtwork.length));
+  }
+
+  useEffect(() => {
+    document.documentElement.classList.add("sonia-inspired-root");
+    document.body.classList.add("sonia-inspired-root");
+
+    return () => {
+      document.documentElement.classList.remove("sonia-inspired-root");
+      document.body.classList.remove("sonia-inspired-root");
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const unlockDocumentScroll = lockDocumentScroll();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setActiveIndex(null);
+      if (event.key === "ArrowLeft") showPrevious();
+      if (event.key === "ArrowRight") showNext();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      unlockDocumentScroll();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const unlockDocumentScroll = lockDocumentScroll();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+
+      setMobileMenuOpen(false);
+      mobileMenuButtonRef.current?.focus();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      unlockDocumentScroll();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
+
+  return (
+    <main id="top" className="min-h-screen bg-white text-[#191919]">
+      <StyleBlock />
+      <header className="sonia-header relative" aria-label="Primary">
+        <button
+          ref={mobileMenuButtonRef}
+          className={cx("sonia-menu-button", mobileMenuOpen && "is-open")}
+          type="button"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="sonia-mobile-menu"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className="sonia-socials" role="group" aria-label="Social links">
+          <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+              <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+            </svg>
+          </a>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M21.7 7.1c.02.22.02.45.02.67 0 6.85-5.22 14.75-14.75 14.75-2.93 0-5.66-.85-7.96-2.34.42.05.82.07 1.25.07 2.42 0 4.64-.82 6.42-2.22a5.2 5.2 0 0 1-4.84-3.6c.32.05.65.08.98.08.47 0 .94-.07 1.38-.18A5.18 5.18 0 0 1 .05 9.25v-.06c.7.4 1.52.65 2.4.68A5.18 5.18 0 0 1 .84 2.95a14.7 14.7 0 0 0 10.68 5.42 5.84 5.84 0 0 1-.13-1.18A5.18 5.18 0 0 1 20.35 3.65a10.2 10.2 0 0 0 3.28-1.25 5.16 5.16 0 0 1-2.28 2.85 10.3 10.3 0 0 0 2.98-.8 11.1 11.1 0 0 1-2.63 2.65Z" fill="currentColor" />
+            </svg>
+          </span>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M13.6 22v-9h3l.45-3.5H13.6V7.27c0-1.01.28-1.7 1.73-1.7h1.84V2.44c-.32-.04-1.41-.14-2.69-.14-2.66 0-4.48 1.62-4.48 4.6v2.58H7v3.5h3v9h3.6Z" fill="currentColor" />
+            </svg>
+          </span>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="5.5" width="17" height="13" rx="1" stroke="currentColor" stroke-width="1.7" />
+              <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </div>
+
+        <div className="sonia-brand">
+          <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
+            <span className="sonia-brand-image">
+              <img src={soniaLaiLogoSource} alt="" />
+            </span>
+            <span className="sonia-brand-name">RUBY SMYTHE</span>
+            <span className="sonia-brand-subtitle">tattoo &amp; illustration</span>
+          </a>
+          <nav className="sonia-main-nav" aria-label="Portfolio sections">
+            <a className="active" href="#work">Illustration</a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Purchase</a>
+            <a href="#about">About</a>
+          </nav>
+        </div>
+
+        <div
+          id="sonia-mobile-menu"
+          className={cx("sonia-mobile-menu", mobileMenuOpen && "is-open")}
+          role="dialog"
+          aria-modal={mobileMenuOpen}
+          aria-hidden={!mobileMenuOpen}
+          aria-label="Site menu"
+        >
+          <nav className="sonia-mobile-nav" aria-label="Portfolio sections">
+            <a className="active" href="#work" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Illustration</a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Purchase</a>
+            <a href="#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>About</a>
+          </nav>
+          <div className="sonia-mobile-socials" role="group" aria-label="Social links">
+            <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on Instagram" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+              </svg>
+            </a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Inkdependent Studio" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <section id="work" className="sonia-gallery" aria-label="Selected work">
+        {soniaInspiredArtwork.map((item, index) => (
+          <figure className="sonia-gallery-item" key={item.fileName}>
+            <button type="button" onClick={() => setActiveIndex(index)} aria-label={`View full image of ${item.title}`}>
+              <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={index > 6 ? "lazy" : "eager"} />
+            </button>
+            <figcaption>{item.title}</figcaption>
+          </figure>
+        ))}
+      </section>
+
+      <footer id="about" className="sonia-footer">
+        <p>Ruby Smythe is a New Zealand-born painter and tattoo artist based in Edinburgh.</p>
+        <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer">@byrubydesigns</a>
+      </footer>
+
+      {activeIndex !== null ? (
+        <div className="sonia-lightbox" role="dialog" aria-modal="true" aria-label={`Full image of ${soniaInspiredArtwork[activeIndex].title}`} onClick={() => setActiveIndex(null)}>
+          <button className="sonia-lightbox-close" type="button" aria-label="Close full image" onClick={() => setActiveIndex(null)}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="1.5" /></svg>
+          </button>
+          <button
+            className="sonia-lightbox-arrow sonia-lightbox-previous"
+            type="button"
+            aria-label="Show previous image"
+            onClick={(event) => {
+              event.stopPropagation();
+              showPrevious();
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m15 4-8 8 8 8" stroke="currentColor" stroke-width="1.5" /></svg>
+          </button>
+          <figure onClick={(event) => event.stopPropagation()}>
+            <img src={soniaInspiredArtwork[activeIndex].src} alt={`${soniaInspiredArtwork[activeIndex].title}, artwork by Ruby Smythe`} />
+            <figcaption>{soniaInspiredArtwork[activeIndex].title}</figcaption>
+          </figure>
+          <button
+            className="sonia-lightbox-arrow sonia-lightbox-next"
+            type="button"
+            aria-label="Show next image"
+            onClick={(event) => {
+              event.stopPropagation();
+              showNext();
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 4 8 8-8 8" stroke="currentColor" stroke-width="1.5" /></svg>
+          </button>
+        </div>
+      ) : null}
+    </main>
+  );
+}
+
 function StyleBlock() {
   return (
     <style>{`
+      @font-face {
+        font-family: "halyard-display";
+        src: url("https://use.typekit.net/af/81b223/00000000000000007761c7e4/31/l?subset_id=2&fvd=n3&v=3") format("woff2"),
+             url("https://use.typekit.net/af/81b223/00000000000000007761c7e4/31/d?subset_id=2&fvd=n3&v=3") format("woff");
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+      }
       .journey-title, .display-serif { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
       .display-serif { letter-spacing: -0.035em; }
       .dark-portfolio-root { background: #080806; overscroll-behavior: none; scrollbar-width: none; }
       .dark-portfolio-root::-webkit-scrollbar { display: none; }
+      .sonia-inspired-root { background: #fff; font-family: "halyard-display", sans-serif; font-weight: 300; scroll-behavior: smooth; }
+      .sonia-header { min-height: 326px; }
+      .sonia-menu-button, .sonia-mobile-menu { display: none; }
+      .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
+      .sonia-socials a, .sonia-socials span { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
+      .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
+      .sonia-socials svg { width: 19px; height: 19px; }
+      .sonia-brand { position: absolute; top: 49px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
+      .sonia-brand-mark { display: flex; min-width: 230px; flex-direction: column; align-items: center; color: #151515; text-decoration: none; }
+      .sonia-brand-image { position: relative; display: block; width: 144px; height: 144px; overflow: hidden; border: 0; border-radius: 999px; }
+      .sonia-brand-image img { position: absolute; top: -1px; left: 50%; width: 154%; max-width: none; height: auto; transform: translateX(-50%); }
+      .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
+      .sonia-brand-name::before, .sonia-brand-name::after { position: absolute; top: -2px; height: 34px; width: 8px; border-top: 2px solid #b85854; border-bottom: 2px solid #b85854; content: ""; }
+      .sonia-brand-name::before { left: -16px; border-left: 2px solid #b85854; }
+      .sonia-brand-name::after { right: -12px; border-right: 2px solid #b85854; }
+      .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
+      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
+      .sonia-main-nav a { color: #303030; text-decoration: none; }
+      .sonia-main-nav a:hover { color: #a64d49; }
+      .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
+      .sonia-gallery { display: grid; grid-template-columns: 1fr; gap: 38px 20px; padding: 92px 4.05% 86px; }
+      .sonia-gallery-item { margin: 0; }
+      .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #f2f0ec; cursor: zoom-in; }
+      .sonia-gallery-item img { display: block; width: 100%; aspect-ratio: 0.71; object-fit: cover; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
+      .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
+      .sonia-gallery-item button:focus-visible { outline: 2px solid #a64d49; outline-offset: 4px; }
+      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-size: 15px; line-height: 1.45; }
+      .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
+      .sonia-footer a { color: inherit; text-underline-offset: 4px; }
+      .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
+      .sonia-lightbox figure { display: grid; max-height: 100%; margin: 0; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; cursor: default; }
+      .sonia-lightbox figure img { max-width: min(76vw, 860px); max-height: calc(100dvh - 108px); object-fit: contain; }
+      .sonia-lightbox figcaption { color: #333; font-size: 12px; text-align: center; }
+      .sonia-lightbox-close, .sonia-lightbox-arrow { position: absolute; display: grid; width: 44px; height: 44px; place-items: center; border: 0; background: transparent; color: #222; cursor: pointer; }
+      .sonia-lightbox-close { top: 22px; right: 24px; }
+      .sonia-lightbox-arrow { top: 50%; transform: translateY(-50%); }
+      .sonia-lightbox-previous { left: 22px; }
+      .sonia-lightbox-next { right: 22px; }
+      .sonia-lightbox-close svg, .sonia-lightbox-arrow svg { width: 25px; height: 25px; }
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+      @media (min-width: 600px) { .sonia-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (min-width: 900px) { .sonia-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+      @media (min-width: 1200px) { .sonia-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+      @media (min-width: 1800px) { .sonia-gallery { grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 17px; } }
+      @media (max-width: 640px) {
+        .sonia-header { min-height: 232px; }
+        .sonia-brand { z-index: 90; top: 30px; }
+        .sonia-brand-image { width: 92px; height: 92px; }
+        .sonia-brand-name { margin-top: 10px; font-size: 24px; }
+        .sonia-brand-name::before, .sonia-brand-name::after { height: 31px; }
+        .sonia-socials, .sonia-main-nav { display: none; }
+        .sonia-menu-button {
+          position: absolute;
+          z-index: 100;
+          top: 59px;
+          left: 19px;
+          display: grid;
+          width: 52px;
+          height: 52px;
+          place-content: center;
+          gap: 6px;
+          border: 0;
+          padding: 0;
+          background: transparent;
+          color: #191919;
+          cursor: pointer;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .sonia-menu-button span {
+          display: block;
+          width: 34px;
+          height: 1px;
+          background: currentColor;
+          transform-origin: center;
+          transition: transform 380ms cubic-bezier(.65,0,.35,1), opacity 240ms ease-in-out;
+        }
+        .sonia-menu-button.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .sonia-menu-button.is-open span:nth-child(2) { opacity: 0; }
+        .sonia-menu-button.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .sonia-menu-button.is-open { position: fixed; }
+        .sonia-menu-button:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
+        .sonia-mobile-menu {
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          display: grid;
+          min-height: 100dvh;
+          grid-template-rows: 1fr auto 1fr;
+          background: #fff;
+          color: #191919;
+          opacity: 0;
+          pointer-events: none;
+          transform: scale(.985);
+          transform-origin: 46px 85px;
+          visibility: hidden;
+          will-change: opacity, transform;
+          transition:
+            opacity 380ms cubic-bezier(.65,0,.35,1),
+            transform 380ms cubic-bezier(.65,0,.35,1),
+            visibility 0s linear 380ms;
+        }
+        .sonia-mobile-menu.is-open {
+          opacity: 1;
+          pointer-events: auto;
+          transform: scale(1);
+          visibility: visible;
+          transition-delay: 0s;
+        }
+        .sonia-mobile-nav {
+          align-self: center;
+          grid-row: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 17px;
+          padding-top: 36px;
+          font-size: clamp(1.9rem, 8vw, 2.2rem);
+          line-height: 1.18;
+          letter-spacing: -.025em;
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 380ms cubic-bezier(.65,0,.35,1), transform 380ms cubic-bezier(.65,0,.35,1);
+        }
+        .sonia-mobile-menu.is-open .sonia-mobile-nav { opacity: 1; transform: translateY(0); transition-delay: 45ms; }
+        .sonia-mobile-nav a { color: inherit; text-decoration: none; }
+        .sonia-mobile-nav a:active { transform: scale(.97); }
+        .sonia-mobile-nav a:focus-visible { outline: 2px solid #a64d49; outline-offset: 6px; }
+        .sonia-mobile-socials {
+          align-self: end;
+          grid-row: 3;
+          display: flex;
+          justify-content: center;
+          gap: 21px;
+          padding-bottom: max(34px, env(safe-area-inset-bottom));
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 380ms cubic-bezier(.65,0,.35,1), transform 380ms cubic-bezier(.65,0,.35,1);
+        }
+        .sonia-mobile-menu.is-open .sonia-mobile-socials { opacity: 1; transform: translateY(0); transition-delay: 45ms; }
+        .sonia-mobile-socials a {
+          display: grid;
+          width: 44px;
+          height: 44px;
+          place-items: center;
+          color: inherit;
+        }
+        .sonia-mobile-socials svg { width: 23px; height: 23px; }
+        .sonia-mobile-socials a:active { transform: scale(.92); }
+        .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
+        .sonia-gallery { padding-top: 10px; }
+        .sonia-footer { flex-direction: column; }
+        .sonia-lightbox { padding: 64px 42px 28px; }
+        .sonia-lightbox figure img { max-width: calc(100vw - 84px); }
+        .sonia-lightbox-previous { left: 0; }
+        .sonia-lightbox-next { right: 0; }
+      }
       @media (prefers-reduced-motion: no-preference) {
         figure img { will-change: transform; }
         .lightbox-enter { animation: lightbox-fade 180ms cubic-bezier(0.23, 1, 0.32, 1); }
@@ -641,10 +1069,31 @@ function StyleBlock() {
         from { opacity: 0; transform: scale(0.96); }
         to { opacity: 1; transform: scale(1); }
       }
+      @keyframes sonia-lightbox-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sonia-menu-button span { transition: none; }
+        .sonia-mobile-menu { transform: none; transition: opacity 160ms linear, visibility 0s linear 160ms; }
+        .sonia-mobile-menu.is-open { transition-delay: 0s; }
+        .sonia-mobile-nav, .sonia-mobile-socials { transform: none; transition: opacity 160ms linear; }
+      }
+      @media (prefers-reduced-transparency: reduce) {
+        .sonia-mobile-menu { background: #fff; }
+      }
     `}</style>
   );
 }
 
 export function App() {
-  return window.location.pathname === "/2" ? <DarkPortfolioPage /> : <HomePage />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/2" element={<DarkPortfolioPage />} />
+        <Route path="/3" element={<SoniaInspiredPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </Router>
+  );
 }
