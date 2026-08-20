@@ -822,10 +822,20 @@ function SoniaInspiredPage() {
                 <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
               </svg>
             </a>
-            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Inkdependent Studio" onClick={closeMobileMenu}>
+            <a href="https://x.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on X" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m5 4 14 16M19 4 5 20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on Facebook" onClick={closeMobileMenu}>
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M13.6 22v-9h3l.45-3.5H13.6V7.27c0-1.01.28-1.7 1.73-1.7h1.84V2.44c-.32-.04-1.41-.14-2.69-.14-2.66 0-4.48 1.62-4.48 4.6v2.58H7v3.5h3v9h3.6Z" fill="currentColor" />
+              </svg>
+            </a>
+            <a href="mailto:hello@byrubydesigns.com" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Email Ruby Smythe" onClick={closeMobileMenu}>
               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
-                <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+                <rect x="3.5" y="5.5" width="17" height="13" rx="1" stroke="currentColor" stroke-width="1.7" />
+                <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
               </svg>
             </a>
           </div>
@@ -1017,7 +1027,7 @@ function StyleBlock() {
           align-items: center;
           gap: 17px;
           padding-top: 36px;
-          font-size: clamp(1.9rem, 8vw, 2.2rem);
+          font-size: clamp(2.25rem, 10vw, 2.75rem);
           line-height: 1.18;
           letter-spacing: -.025em;
           opacity: 0;
@@ -1033,7 +1043,7 @@ function StyleBlock() {
           grid-row: 3;
           display: flex;
           justify-content: center;
-          gap: 21px;
+          gap: 14px;
           padding-bottom: max(34px, env(safe-area-inset-bottom));
           opacity: 0;
           transform: translateY(8px);
