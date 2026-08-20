@@ -1088,6 +1088,19 @@ function StyleBlock() {
 }
 
 export function App() {
+  useEffect(() => {
+    const favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.type = "image/webp";
+    favicon.href = rubyBrandIconSource;
+    favicon.dataset.rubyFavicon = "true";
+    document.head.appendChild(favicon);
+
+    return () => {
+      favicon.remove();
+    };
+  }, []);
+
   return (
     <Router>
       <Routes>
