@@ -768,22 +768,12 @@ function SoniaInspiredPage() {
               <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
             </svg>
           </a>
-          <span aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M21.7 7.1c.02.22.02.45.02.67 0 6.85-5.22 14.75-14.75 14.75-2.93 0-5.66-.85-7.96-2.34.42.05.82.07 1.25.07 2.42 0 4.64-.82 6.42-2.22a5.2 5.2 0 0 1-4.84-3.6c.32.05.65.08.98.08.47 0 .94-.07 1.38-.18A5.18 5.18 0 0 1 .05 9.25v-.06c.7.4 1.52.65 2.4.68A5.18 5.18 0 0 1 .84 2.95a14.7 14.7 0 0 0 10.68 5.42 5.84 5.84 0 0 1-.13-1.18A5.18 5.18 0 0 1 20.35 3.65a10.2 10.2 0 0 0 3.28-1.25 5.16 5.16 0 0 1-2.28 2.85 10.3 10.3 0 0 0 2.98-.8 11.1 11.1 0 0 1-2.63 2.65Z" fill="currentColor" />
+          <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Inkdependent Studio">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+              <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
             </svg>
-          </span>
-          <span aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M13.6 22v-9h3l.45-3.5H13.6V7.27c0-1.01.28-1.7 1.73-1.7h1.84V2.44c-.32-.04-1.41-.14-2.69-.14-2.66 0-4.48 1.62-4.48 4.6v2.58H7v3.5h3v9h3.6Z" fill="currentColor" />
-            </svg>
-          </span>
-          <span aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <rect x="3.5" y="5.5" width="17" height="13" rx="1" stroke="currentColor" stroke-width="1.7" />
-              <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
-            </svg>
-          </span>
+          </a>
         </div>
 
         <div className="sonia-brand">
