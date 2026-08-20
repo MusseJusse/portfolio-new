@@ -676,7 +676,7 @@ const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }
 }));
 
 const soniaInspiredArtworkRows = soniaInspiredArtwork.reduce<Array<typeof soniaInspiredArtwork>>((rows, item) => {
-  const rowSize = rows.length % 2 === 0 ? 3 : 4;
+  const rowSize = rows.length % 2 === 0 ? 4 : 3;
   const currentRow = rows[rows.length - 1];
 
   if (!currentRow || currentRow.length === rowSize) {
