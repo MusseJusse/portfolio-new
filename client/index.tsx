@@ -904,9 +904,9 @@ function StyleBlock() {
       .sonia-header { min-height: 326px; }
       .sonia-menu-button, .sonia-mobile-menu { display: none; }
       .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
-      .sonia-socials a, .sonia-socials span { display: grid; width: 26px; height: 26px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
+      .sonia-socials a, .sonia-socials span { display: grid; width: 32px; height: 32px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
       .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
-      .sonia-socials svg { width: 19px; height: 19px; }
+      .sonia-socials svg { width: 24px; height: 24px; }
       .sonia-brand { position: absolute; top: 49px; left: 50%; display: flex; transform: translateX(-50%); flex-direction: column; align-items: center; }
       .sonia-brand-mark { display: flex; min-width: 230px; flex-direction: column; align-items: center; color: #151515; text-decoration: none; }
       .sonia-brand-image { position: relative; display: block; width: 180px; height: 180px; overflow: hidden; border: 0; border-radius: 0; }
