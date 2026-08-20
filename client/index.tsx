@@ -675,6 +675,19 @@ const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }
   title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`
 }));
 
+const soniaInspiredArtworkRows = soniaInspiredArtwork.reduce<Array<typeof soniaInspiredArtwork>>((rows, item) => {
+  const rowSize = rows.length % 2 === 0 ? 3 : 4;
+  const currentRow = rows[rows.length - 1];
+
+  if (!currentRow || currentRow.length === rowSize) {
+    rows.push([item]);
+  } else {
+    currentRow.push(item);
+  }
+
+  return rows;
+}, []);
+
 const soniaLaiLogoSource = rubyBrandIconSource;
 
 function SoniaInspiredPage() {
@@ -823,13 +836,21 @@ function SoniaInspiredPage() {
       </header>
 
       <section id="work" className="sonia-gallery" aria-label="Selected work">
-        {soniaInspiredArtwork.map((item, index) => (
-          <figure className="sonia-gallery-item" key={item.fileName}>
-            <button type="button" onClick={() => setActiveIndex(index)} aria-label={`View full image of ${item.title}`}>
-              <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={index > 6 ? "lazy" : "eager"} />
-            </button>
-            <figcaption>{item.title}</figcaption>
-          </figure>
+        {soniaInspiredArtworkRows.map((row, rowIndex) => (
+          <div className={cx("sonia-gallery-row", row.length === 3 ? "sonia-gallery-row-three" : "sonia-gallery-row-four")} key={rowIndex}>
+            {row.map((item) => {
+              const itemIndex = soniaInspiredArtwork.indexOf(item);
+
+              return (
+                <figure className="sonia-gallery-item" key={item.fileName}>
+                  <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
+                    <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} />
+                  </button>
+                  <figcaption>{item.title}</figcaption>
+                </figure>
+              );
+            })}
+          </div>
         ))}
       </section>
 
@@ -930,10 +951,12 @@ function StyleBlock() {
       .sonia-lightbox-next { right: 22px; }
       .sonia-lightbox-close svg, .sonia-lightbox-arrow svg { width: 25px; height: 25px; }
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
-      @media (min-width: 600px) { .sonia-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      @media (min-width: 900px) { .sonia-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-      @media (min-width: 1200px) { .sonia-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-      @media (min-width: 1800px) { .sonia-gallery { grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 17px; } }
+      .sonia-gallery-row { display: grid; gap: 38px 20px; }
+      .sonia-gallery-row-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sonia-gallery-row-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      @media (min-width: 600px) and (max-width: 899px) { .sonia-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 899px) { .sonia-gallery-row { display: contents; } }
+      @media (min-width: 900px) { .sonia-gallery { display: grid; gap: 38px 20px; } }
       @media (max-width: 640px) {
         .sonia-header { min-height: 232px; }
         .sonia-brand { z-index: 90; top: 30px; }
