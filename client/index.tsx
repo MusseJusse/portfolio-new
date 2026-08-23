@@ -820,10 +820,11 @@ function SoniaInspiredPage() {
         if (yearDivider && paintingYearBreakIndex > 0) {
           const firstYearBottom = layoutItems(items.slice(0, paintingYearBreakIndex), 0);
           const dividerY = firstYearBottom + (isMobile ? 48 : 64);
-          const dividerPageInset = window.innerWidth * 0.0405;
+          const viewportWidth = document.documentElement.clientWidth;
+          const dividerPageInset = viewportWidth * 0.0405;
           const dividerX = dividerPageInset - gallery.getBoundingClientRect().left;
 
-          yearDivider.style.width = `${window.innerWidth - dividerPageInset * 2}px`;
+          yearDivider.style.width = `${viewportWidth - dividerPageInset * 2}px`;
           yearDivider.style.transform = `translate3d(${dividerX}px, ${dividerY}px, 0)`;
 
           const secondYearStart = dividerY + yearDivider.offsetHeight + (isMobile ? 24 : 32);
