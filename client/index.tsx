@@ -1081,7 +1081,7 @@ function StyleBlock() {
       .sonia-gallery-item figcaption { padding-top: 14px; color: #353535; font-size: 14px; line-height: 1.25; }
       .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
       .sonia-footer a { color: inherit; text-underline-offset: 4px; }
-      .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
+      .sonia-lightbox { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.82); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
       .sonia-lightbox figure { display: grid; max-height: 100%; margin: 0; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; cursor: default; }
       .sonia-lightbox figure img { max-width: min(76vw, 860px); max-height: calc(100dvh - 108px); object-fit: contain; }
       .sonia-lightbox figcaption { color: #333; font-size: 12px; text-align: center; }
@@ -1132,7 +1132,7 @@ function StyleBlock() {
         .sonia-mobile-menu {
           position: fixed;
           inset: 0;
-          z-index: 80;
+          z-index: 98;
           display: grid;
           min-height: 100dvh;
           grid-template-rows: 1fr auto 1fr;
