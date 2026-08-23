@@ -857,6 +857,11 @@ function SoniaInspiredPage() {
     setMobileMenuOpen(false);
   }
 
+  function toggleMobileMenu() {
+    setActiveIndex(null);
+    setMobileMenuOpen((open) => !open);
+  }
+
   function selectCategory(categoryId: GalleryCategoryId) {
     if (categoryId === selectedCategoryId) return;
 
@@ -877,7 +882,7 @@ function SoniaInspiredPage() {
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
           aria-controls="sonia-mobile-menu"
-          onClick={() => setMobileMenuOpen((open) => !open)}
+          onClick={toggleMobileMenu}
         >
           <span />
           <span />
