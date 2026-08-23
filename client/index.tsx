@@ -1073,14 +1073,14 @@ function StyleBlock() {
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; max-width: 1800px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
-      .sonia-gallery-year-heading { width: 100%; max-width: 1800px; margin: 0 auto 22px; color: #383838; font-family: Georgia, "Times New Roman", serif; font-size: 14px; font-weight: 400; line-height: 1.25; }
-      .sonia-gallery-year-divider { position: absolute; top: 0; left: 0; margin: 0; border-top: 1px solid #dedbd5; padding-top: 18px; color: #383838; font-family: Georgia, "Times New Roman", serif; font-size: 14px; font-weight: 400; line-height: 1.25; opacity: 0; }
+      .sonia-gallery-year-heading { width: 100%; max-width: 1800px; margin: 0 auto 22px; color: #383838; font-size: 14px; font-weight: 400; line-height: 1.25; }
+      .sonia-gallery-year-divider { position: absolute; top: 0; left: 0; margin: 0; border-top: 1px solid #dedbd5; padding-top: 18px; color: #383838; font-size: 14px; font-weight: 400; line-height: 1.25; opacity: 0; }
       .sonia-gallery-grid.is-ready .sonia-gallery-item, .sonia-gallery-grid.is-ready .sonia-gallery-year-divider { opacity: 1; }
       .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #fff; cursor: zoom-in; }
       .sonia-gallery-item img { display: block; width: 100%; height: auto; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
       .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
       .sonia-gallery-item button:focus-visible { outline: 2px solid #a64d49; outline-offset: 3px; }
-      .sonia-gallery-item figcaption { padding-top: 14px; color: #353535; font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.25; }
+      .sonia-gallery-item figcaption { padding-top: 14px; color: #353535; font-size: 14px; line-height: 1.25; }
       .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
       .sonia-footer a { color: inherit; text-underline-offset: 4px; }
       .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
