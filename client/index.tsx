@@ -681,19 +681,18 @@ const drawingArtwork = drawingAspectRatios.map((aspectRatio, index) => {
 });
 
 const paintingArtworkSource = [
-  { title: "Painting 01", aspectRatio: "1273 / 1800", year: 2026 },
-  { title: "Painting 02", aspectRatio: "1044 / 1501", year: 2026 },
-  { title: "Painting 03", aspectRatio: "1055 / 1510", year: 2026 },
-  { title: "Kererū", aspectRatio: "1 / 1", year: 2022 },
-  { title: "Kākā", aspectRatio: "1 / 1", year: 2022 },
-  { title: "Tūī", aspectRatio: "1 / 1", year: 2022 },
-  { title: "Bird studies", aspectRatio: "1800 / 1273", year: 2022 }
+  { fileName: "painting-01.webp", title: "Painting 01", aspectRatio: "1273 / 1800", year: 2026 },
+  { fileName: "painting-02.webp", title: "Painting 02", aspectRatio: "1044 / 1501", year: 2026 },
+  { fileName: "painting-03.webp", title: "Painting 03", aspectRatio: "1055 / 1510", year: 2026 },
+  { fileName: "painting-08.webp", title: "Painting 08", aspectRatio: "1130 / 1412", year: 2026 },
+  { fileName: "painting-09.webp", title: "Painting 09", aspectRatio: "1297 / 1800", year: 2026 },
+  { fileName: "painting-04.webp", title: "Kererū", aspectRatio: "1 / 1", year: 2022 },
+  { fileName: "painting-05.webp", title: "Kākā", aspectRatio: "1 / 1", year: 2022 },
+  { fileName: "painting-06.webp", title: "Tūī", aspectRatio: "1 / 1", year: 2022 },
+  { fileName: "painting-07.webp", title: "Bird studies", aspectRatio: "1800 / 1273", year: 2022 }
 ] as const;
 
-const paintingArtwork = paintingArtworkSource.map(({ title, aspectRatio, year }, index) => {
-  const itemNumber = String(index + 1).padStart(2, "0");
-  const fileName = `painting-${itemNumber}.webp`;
-
+const paintingArtwork = paintingArtworkSource.map(({ fileName, title, aspectRatio, year }) => {
   return {
     fileName,
     src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/painting/web/${fileName}`,
