@@ -622,12 +622,12 @@ function DarkPortfolioPage() {
   );
 }
 
-const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string }> = [
+const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string; aspectRatio?: string }> = [
   { fileName: "6a16b8a0-2e16-4a29-acef-b7bcdb21793b.webp", title: "Iris & Daffodil" },
   { fileName: "f4442278-45fe-42f2-9c98-d375f6682306.webp", title: "The Garden Study" },
-  { fileName: "f8069b52-e182-49a8-b3f7-c87e710c9f29.webp", title: "Red Admiral" },
-  { fileName: "img_0502.webp", title: "Blue Iris" },
-  { fileName: "img_0545.webp", title: "Spring Arrangement" },
+  { fileName: "f8069b52-e182-49a8-b3f7-c87e710c9f29.webp", title: "Red Admiral", aspectRatio: "4 / 5" },
+  { fileName: "img_0502.webp", title: "Blue Iris", aspectRatio: "2 / 3" },
+  { fileName: "img_0545.webp", title: "Spring Arrangement", aspectRatio: "1 / 1" },
   { fileName: "img_0723.webp", title: "After the Rain" },
   { fileName: "img_0745.webp", title: "Botanical No. 01" },
   { fileName: "img_1124.webp", title: "Wildflower Study" },
@@ -637,21 +637,21 @@ const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: stri
   { fileName: "img_1140.webp", title: "Botanical No. 02" },
   { fileName: "img_1220.webp", title: "Aotearoa to Edinburgh" },
   { fileName: "img_1356.webp", title: "Painted Wings" },
-  { fileName: "img_1588.webp", title: "Yellow & Blue" },
-  { fileName: "img_1589.webp", title: "In Bloom" },
+  { fileName: "img_1588.webp", title: "Yellow & Blue", aspectRatio: "1273 / 1800" },
+  { fileName: "img_1589.webp", title: "In Bloom", aspectRatio: "1273 / 1800" },
   { fileName: "img_2233.webp" },
   { fileName: "img_2522.webp" },
   { fileName: "img_2526.webp" },
   { fileName: "img_3112.webp" },
-  { fileName: "img_3531.webp" },
-  { fileName: "img_3554.webp" },
+  { fileName: "img_3531.webp", aspectRatio: "4 / 5" },
+  { fileName: "img_3554.webp", aspectRatio: "4 / 5" },
   { fileName: "img_3709.webp" },
   { fileName: "img_4334.webp" },
   { fileName: "img_5793.webp" },
-  { fileName: "img_5794.webp" },
+  { fileName: "img_5794.webp", aspectRatio: "4 / 5" },
   { fileName: "img_5798.webp" },
-  { fileName: "img_5804.webp" },
-  { fileName: "img_6601.webp" },
+  { fileName: "img_5804.webp", aspectRatio: "4 / 5" },
+  { fileName: "img_6601.webp", aspectRatio: "4 / 5" },
   { fileName: "img_7731.webp" },
   { fileName: "img_7733.webp" },
   { fileName: "img_7737.webp" },
@@ -665,28 +665,16 @@ const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: stri
   { fileName: "img_7985.webp" },
   { fileName: "img_8845.webp" },
   { fileName: "img_8846.webp" },
-  { fileName: "img_9586.webp" },
-  { fileName: "img_9587.webp" }
+  { fileName: "img_9586.webp", aspectRatio: "1119 / 1589" },
+  { fileName: "img_9587.webp", aspectRatio: "1110 / 1576" }
 ];
 
-const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title }, index) => ({
+const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title, aspectRatio }, index) => ({
   fileName,
   src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/${fileName}`,
-  title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`
+  title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`,
+  aspectRatio: aspectRatio ?? "3 / 4"
 }));
-
-const soniaInspiredArtworkRows = soniaInspiredArtwork.reduce<Array<typeof soniaInspiredArtwork>>((rows, item) => {
-  const rowSize = rows.length % 2 === 0 ? 4 : 3;
-  const currentRow = rows[rows.length - 1];
-
-  if (!currentRow || currentRow.length === rowSize) {
-    rows.push([item]);
-  } else {
-    currentRow.push(item);
-  }
-
-  return rows;
-}, []);
 
 const soniaLaiLogoSource = rubyBrandIconSource;
 
@@ -694,6 +682,8 @@ function SoniaInspiredPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+  const galleryItemRefs = useRef<Array<HTMLElement | null>>([]);
 
   function showPrevious() {
     setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
@@ -750,6 +740,53 @@ function SoniaInspiredPage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    let layoutFrame = 0;
+
+    function scheduleLayout() {
+      cancelAnimationFrame(layoutFrame);
+      layoutFrame = requestAnimationFrame(() => {
+        const items = galleryItemRefs.current.filter((item): item is HTMLElement => item !== null);
+        const columnCount = window.innerWidth >= 900 ? 3 : window.innerWidth >= 600 ? 2 : 1;
+        const horizontalGap = columnCount === 1 ? 0 : 11;
+        const verticalGap = 28;
+        const itemWidth = (gallery.clientWidth - horizontalGap * (columnCount - 1)) / columnCount;
+        const columnHeights = Array.from({ length: columnCount }, () => 0);
+
+        items.forEach((item) => {
+          item.style.width = `${itemWidth}px`;
+        });
+
+        items.forEach((item, index) => {
+          const columnIndex = index % columnCount;
+          const x = columnIndex * (itemWidth + horizontalGap);
+          const y = columnHeights[columnIndex];
+
+          item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          columnHeights[columnIndex] = y + item.offsetHeight + verticalGap;
+        });
+
+        gallery.style.height = `${Math.max(...columnHeights) - verticalGap}px`;
+        gallery.classList.add("is-ready");
+      });
+    }
+
+    const resizeObserver = new ResizeObserver(scheduleLayout);
+    resizeObserver.observe(gallery);
+    galleryItemRefs.current.forEach((item) => {
+      if (item) resizeObserver.observe(item);
+    });
+    scheduleLayout();
+
+    return () => {
+      cancelAnimationFrame(layoutFrame);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
@@ -836,22 +873,22 @@ function SoniaInspiredPage() {
       </header>
 
       <section id="work" className="sonia-gallery" aria-label="Selected work">
-        {soniaInspiredArtworkRows.map((row, rowIndex) => (
-          <div className={cx("sonia-gallery-row", row.length === 3 ? "sonia-gallery-row-three" : "sonia-gallery-row-four")} key={rowIndex}>
-            {row.map((item) => {
-              const itemIndex = soniaInspiredArtwork.indexOf(item);
-
-              return (
-                <figure className="sonia-gallery-item" key={item.fileName}>
-                  <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
-                    <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} />
-                  </button>
-                  <figcaption>{item.title}</figcaption>
-                </figure>
-              );
-            })}
-          </div>
-        ))}
+        <div className="sonia-gallery-grid" ref={galleryRef}>
+          {soniaInspiredArtwork.map((item, itemIndex) => (
+            <figure
+              className="sonia-gallery-item"
+              key={item.fileName}
+              ref={(element) => {
+                galleryItemRefs.current[itemIndex] = element;
+              }}
+            >
+              <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
+                <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} style={{ aspectRatio: item.aspectRatio }} />
+              </button>
+              <figcaption>{item.title}</figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
 
       <footer id="about" className="sonia-footer">
@@ -928,13 +965,15 @@ function StyleBlock() {
       .sonia-main-nav a { color: #303030; text-decoration: none; }
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
-      .sonia-gallery { display: grid; grid-template-columns: 1fr; gap: 38px 20px; padding: 92px 4.05% 86px; }
-      .sonia-gallery-item { margin: 0; }
-      .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #f2f0ec; cursor: zoom-in; }
-      .sonia-gallery-item img { display: block; width: 100%; aspect-ratio: 0.71; object-fit: cover; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
+      .sonia-gallery { padding: 12px 16px 44px; background: #aaa9a4; }
+      .sonia-gallery-grid { position: relative; width: 100%; }
+      .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
+      .sonia-gallery-grid.is-ready .sonia-gallery-item { opacity: 1; }
+      .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #9e9d98; cursor: zoom-in; }
+      .sonia-gallery-item img { display: block; width: 100%; height: auto; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
       .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
-      .sonia-gallery-item button:focus-visible { outline: 2px solid #a64d49; outline-offset: 4px; }
-      .sonia-gallery-item figcaption { padding-top: 13px; color: #353535; font-size: 15px; line-height: 1.45; }
+      .sonia-gallery-item button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+      .sonia-gallery-item figcaption { padding-top: 14px; color: #fff; font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.25; }
       .sonia-footer { display: flex; justify-content: space-between; gap: 24px; margin: 0 4.05%; border-top: 1px solid #dedbd5; padding: 44px 0 58px; color: #383838; font-size: 12px; line-height: 1.7; }
       .sonia-footer a { color: inherit; text-underline-offset: 4px; }
       .sonia-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 38px 80px 28px; background: rgba(255,255,255,.96); cursor: zoom-out; animation: sonia-lightbox-in 170ms ease-out; }
@@ -948,12 +987,6 @@ function StyleBlock() {
       .sonia-lightbox-next { right: 22px; }
       .sonia-lightbox-close svg, .sonia-lightbox-arrow svg { width: 25px; height: 25px; }
       .tap-target { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
-      .sonia-gallery-row { display: grid; gap: 38px 20px; }
-      .sonia-gallery-row-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .sonia-gallery-row-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      @media (min-width: 600px) and (max-width: 899px) { .sonia-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      @media (max-width: 899px) { .sonia-gallery-row { display: contents; } }
-      @media (min-width: 900px) { .sonia-gallery { display: grid; gap: 38px 20px; } }
       @media (max-width: 640px) {
         .sonia-header { min-height: 232px; }
         .sonia-brand { z-index: 90; top: 30px; }
@@ -1059,7 +1092,7 @@ function StyleBlock() {
         .sonia-mobile-socials svg { width: 23px; height: 23px; }
         .sonia-mobile-socials a:active { transform: scale(.92); }
         .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
-        .sonia-gallery { padding-top: 10px; }
+        .sonia-gallery { padding: 10px 4.05% 86px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
         .sonia-lightbox figure img { max-width: calc(100vw - 84px); }
