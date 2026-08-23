@@ -920,7 +920,6 @@ function SoniaInspiredPage() {
                 {category.label}
               </button>
             ))}
-            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Purchase</a>
             <a href="#about">About</a>
           </nav>
         </div>
@@ -950,7 +949,6 @@ function SoniaInspiredPage() {
                 {category.label}
               </button>
             ))}
-            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Purchase</a>
             <a href="#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>About</a>
           </nav>
           <div className="sonia-mobile-socials" role="group" aria-label="Social links">
