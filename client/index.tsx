@@ -965,7 +965,7 @@ function StyleBlock() {
       .sonia-main-nav a { color: #303030; text-decoration: none; }
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
-      .sonia-gallery { padding: 12px 16px 44px; background: #fff; }
+      .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
       .sonia-gallery-grid.is-ready .sonia-gallery-item { opacity: 1; }
@@ -1092,7 +1092,7 @@ function StyleBlock() {
         .sonia-mobile-socials svg { width: 23px; height: 23px; }
         .sonia-mobile-socials a:active { transform: scale(.92); }
         .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
-        .sonia-gallery { padding: 10px 4.05% 86px; }
+        .sonia-gallery { padding: 32px 4.05% 86px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
         .sonia-lightbox figure img { max-width: calc(100vw - 84px); }
