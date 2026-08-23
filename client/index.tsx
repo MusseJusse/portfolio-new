@@ -627,6 +627,7 @@ type GalleryArtwork = {
   src: string;
   title: string;
   aspectRatio: string;
+  year?: 2022 | 2026;
 };
 
 type GalleryCategoryId = "tattoo" | "drawings" | "paintings";
@@ -679,16 +680,16 @@ const drawingArtwork = drawingAspectRatios.map((aspectRatio, index) => {
 });
 
 const paintingArtworkSource = [
-  { title: "Painting 01", aspectRatio: "1273 / 1800" },
-  { title: "Painting 02", aspectRatio: "1044 / 1501" },
-  { title: "Painting 03", aspectRatio: "1055 / 1510" },
-  { title: "Kererū", aspectRatio: "1 / 1" },
-  { title: "Kākā", aspectRatio: "1 / 1" },
-  { title: "Tūī", aspectRatio: "1 / 1" },
-  { title: "Bird studies", aspectRatio: "1800 / 1273" }
+  { title: "Painting 01", aspectRatio: "1273 / 1800", year: 2026 },
+  { title: "Painting 02", aspectRatio: "1044 / 1501", year: 2026 },
+  { title: "Painting 03", aspectRatio: "1055 / 1510", year: 2026 },
+  { title: "Kererū", aspectRatio: "1 / 1", year: 2022 },
+  { title: "Kākā", aspectRatio: "1 / 1", year: 2022 },
+  { title: "Tūī", aspectRatio: "1 / 1", year: 2022 },
+  { title: "Bird studies", aspectRatio: "1800 / 1273", year: 2022 }
 ] as const;
 
-const paintingArtwork = paintingArtworkSource.map(({ title, aspectRatio }, index) => {
+const paintingArtwork = paintingArtworkSource.map(({ title, aspectRatio, year }, index) => {
   const itemNumber = String(index + 1).padStart(2, "0");
   const fileName = `painting-${itemNumber}.webp`;
 
@@ -696,7 +697,8 @@ const paintingArtwork = paintingArtworkSource.map(({ title, aspectRatio }, index
     fileName,
     src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/painting/web/${fileName}`,
     title,
-    aspectRatio
+    aspectRatio,
+    year
   };
 });
 
@@ -715,8 +717,10 @@ function SoniaInspiredPage() {
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryItemRefs = useRef<Array<HTMLElement | null>>([]);
+  const paintingYearDividerRef = useRef<HTMLHeadingElement | null>(null);
   const selectedCategory = galleryCategories.find((category) => category.id === selectedCategoryId) ?? galleryCategories[0];
   const soniaInspiredArtwork = selectedCategory.items;
+  const paintingYearBreakIndex = soniaInspiredArtwork.findIndex((item) => item.year === 2022);
 
   function showPrevious() {
     setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
@@ -790,22 +794,45 @@ function SoniaInspiredPage() {
         const horizontalGap = isMobile ? 2 : 11;
         const verticalGap = 28;
         const itemWidth = (gallery.clientWidth - horizontalGap * (columnCount - 1)) / columnCount;
-        const columnHeights = Array.from({ length: columnCount }, () => 0);
 
         items.forEach((item) => {
           item.style.width = `${itemWidth}px`;
         });
 
-        items.forEach((item, index) => {
-          const columnIndex = index % columnCount;
-          const x = columnIndex * (itemWidth + horizontalGap);
-          const y = columnHeights[columnIndex];
+        function layoutItems(group: HTMLElement[], startY: number) {
+          const columnHeights = Array.from({ length: columnCount }, () => startY);
 
-          item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-          columnHeights[columnIndex] = y + item.offsetHeight + verticalGap;
-        });
+          group.forEach((item, index) => {
+            const columnIndex = index % columnCount;
+            const x = columnIndex * (itemWidth + horizontalGap);
+            const y = columnHeights[columnIndex];
 
-        gallery.style.height = `${Math.max(...columnHeights) - verticalGap}px`;
+            item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            columnHeights[columnIndex] = y + item.offsetHeight + verticalGap;
+          });
+
+          return Math.max(...columnHeights) - verticalGap;
+        }
+
+        const yearDivider = paintingYearDividerRef.current;
+        let galleryBottom: number;
+
+        if (yearDivider && paintingYearBreakIndex > 0) {
+          const firstYearBottom = layoutItems(items.slice(0, paintingYearBreakIndex), 0);
+          const dividerY = firstYearBottom + (isMobile ? 48 : 64);
+          const dividerPageInset = window.innerWidth * 0.0405;
+          const dividerX = dividerPageInset - gallery.getBoundingClientRect().left;
+
+          yearDivider.style.width = `${window.innerWidth - dividerPageInset * 2}px`;
+          yearDivider.style.transform = `translate3d(${dividerX}px, ${dividerY}px, 0)`;
+
+          const secondYearStart = dividerY + yearDivider.offsetHeight + (isMobile ? 24 : 32);
+          galleryBottom = layoutItems(items.slice(paintingYearBreakIndex), secondYearStart);
+        } else {
+          galleryBottom = layoutItems(items, 0);
+        }
+
+        gallery.style.height = `${galleryBottom}px`;
         gallery.classList.add("is-ready");
       });
     }
@@ -815,6 +842,7 @@ function SoniaInspiredPage() {
     galleryItemRefs.current.forEach((item) => {
       if (item) resizeObserver.observe(item);
     });
+    if (paintingYearDividerRef.current) resizeObserver.observe(paintingYearDividerRef.current);
     scheduleLayout();
 
     return () => {
@@ -942,21 +970,27 @@ function SoniaInspiredPage() {
       </header>
 
       <section id="work" className="sonia-gallery" aria-label={`${selectedCategory.label} work`}>
+        {selectedCategoryId === "paintings" ? <h2 className="sonia-gallery-year-heading">2026</h2> : null}
         <div className="sonia-gallery-grid" ref={galleryRef}>
-          {soniaInspiredArtwork.map((item, itemIndex) => (
-            <figure
-              className="sonia-gallery-item"
-              key={item.fileName}
-              ref={(element) => {
-                galleryItemRefs.current[itemIndex] = element;
-              }}
-            >
-              <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
-                <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} style={{ aspectRatio: item.aspectRatio }} />
-              </button>
-              <figcaption>{item.title}</figcaption>
-            </figure>
-          ))}
+          {soniaInspiredArtwork.flatMap((item, itemIndex) => [
+            selectedCategoryId === "paintings" && itemIndex === paintingYearBreakIndex ? (
+              <h2 className="sonia-gallery-year-divider" key="paintings-2022" ref={paintingYearDividerRef}>2022</h2>
+            ) : null,
+            (
+              <figure
+                className="sonia-gallery-item"
+                key={item.fileName}
+                ref={(element) => {
+                  galleryItemRefs.current[itemIndex] = element;
+                }}
+              >
+                <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
+                  <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} style={{ aspectRatio: item.aspectRatio }} />
+                </button>
+                <figcaption>{item.title}</figcaption>
+              </figure>
+            )
+          ])}
         </div>
       </section>
 
@@ -1037,7 +1071,9 @@ function StyleBlock() {
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; max-width: 1800px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
-      .sonia-gallery-grid.is-ready .sonia-gallery-item { opacity: 1; }
+      .sonia-gallery-year-heading { width: 100%; max-width: 1800px; margin: 0 auto 22px; color: #383838; font-family: Georgia, "Times New Roman", serif; font-size: 14px; font-weight: 400; line-height: 1.25; }
+      .sonia-gallery-year-divider { position: absolute; top: 0; left: 0; margin: 0; border-top: 1px solid #dedbd5; padding-top: 18px; color: #383838; font-family: Georgia, "Times New Roman", serif; font-size: 14px; font-weight: 400; line-height: 1.25; opacity: 0; }
+      .sonia-gallery-grid.is-ready .sonia-gallery-item, .sonia-gallery-grid.is-ready .sonia-gallery-year-divider { opacity: 1; }
       .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #fff; cursor: zoom-in; }
       .sonia-gallery-item img { display: block; width: 100%; height: auto; transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 300ms ease; }
       .sonia-gallery-item button:hover img { transform: scale(1.018); filter: saturate(1.04); }
