@@ -888,22 +888,6 @@ function SoniaInspiredPage() {
           <span />
         </button>
 
-        <div className="sonia-socials" role="group" aria-label="Social links">
-          <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
-              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
-              <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
-            </svg>
-          </a>
-          <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Inkdependent Studio">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-              <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
-              <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
-            </svg>
-          </a>
-        </div>
-
         <div className="sonia-brand">
           <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
             <span className="sonia-brand-image">
@@ -925,6 +909,21 @@ function SoniaInspiredPage() {
               </button>
             ))}
             <a href="#about">About</a>
+            <div className="sonia-socials" role="group" aria-label="Social links">
+              <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+                  <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+                </svg>
+              </a>
+              <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Inkdependent Studio">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                  <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+                </svg>
+              </a>
+            </div>
           </nav>
         </div>
 
@@ -1058,7 +1057,7 @@ function StyleBlock() {
       .sonia-inspired-root { background: #fff; font-family: "TikTok Sans Variable", Arial, sans-serif; font-weight: 400; scroll-behavior: smooth; }
       .sonia-header { min-height: 326px; }
       .sonia-menu-button, .sonia-mobile-menu { display: none; }
-      .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
+      .sonia-socials { display: flex; align-items: center; gap: 23px; }
       .sonia-socials a, .sonia-socials span { display: grid; width: 32px; height: 32px; place-items: center; color: #111; transition: color 160ms ease, transform 160ms ease; }
       .sonia-socials a:hover { color: #a64d49; transform: translateY(-2px); }
       .sonia-socials svg { width: 24px; height: 24px; }
@@ -1068,7 +1067,7 @@ function StyleBlock() {
       .sonia-brand-image img { position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: contain; }
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
       .sonia-brand-subtitle { margin-top: 5px; color: #90344c; font-family: "TikTok Sans Variable", Arial, sans-serif; font-size: 14px; font-style: oblique 6deg; font-variation-settings: "slnt" -6; line-height: 1; letter-spacing: .04em; }
-      .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
+      .sonia-main-nav { display: flex; align-items: center; gap: 27px; margin-top: 25px; font-size: 16px; }
       .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
       .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
       .sonia-main-nav .active { border-bottom: 1px solid currentColor; }
