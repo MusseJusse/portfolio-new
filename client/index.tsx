@@ -623,19 +623,19 @@ function DarkPortfolioPage() {
 }
 
 const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string; aspectRatio?: string }> = [
-  { fileName: "1 floral forearm piece.webp", title: "Floral Forearm" },
-  { fileName: "7 kererū.webp", title: "Kererū" },
-  { fileName: "IMG_0502.webp", title: "Tattoo 03", aspectRatio: "2 / 3" },
-  { fileName: "IMG_0545.webp", title: "Tattoo 04", aspectRatio: "1 / 1" },
-  { fileName: "IMG_1163.webp", title: "Tattoo 05", aspectRatio: "2 / 3" },
-  { fileName: "IMG_1220.webp", title: "Tattoo 06" },
-  { fileName: "IMG_1356.webp", title: "Tattoo 07" },
-  { fileName: "IMG_2233.webp", title: "Tattoo 08" },
-  { fileName: "IMG_2522.webp", title: "Tattoo 09" },
-  { fileName: "IMG_2526.webp", title: "Tattoo 10" },
-  { fileName: "IMG_3112.webp", title: "Tattoo 11" },
+  { fileName: "IMG_6601.webp", title: "Tattoo 13" },
   { fileName: "IMG_3554.webp", title: "Tattoo 12" },
-  { fileName: "IMG_6601.webp", title: "Tattoo 13" }
+  { fileName: "IMG_3112.webp", title: "Tattoo 11" },
+  { fileName: "IMG_2526.webp", title: "Tattoo 10" },
+  { fileName: "IMG_2522.webp", title: "Tattoo 09" },
+  { fileName: "IMG_2233.webp", title: "Tattoo 08" },
+  { fileName: "IMG_1356.webp", title: "Tattoo 07" },
+  { fileName: "IMG_1220.webp", title: "Tattoo 06" },
+  { fileName: "IMG_1163.webp", title: "Tattoo 05", aspectRatio: "2 / 3" },
+  { fileName: "IMG_0545.webp", title: "Tattoo 04", aspectRatio: "1 / 1" },
+  { fileName: "IMG_0502.webp", title: "Tattoo 03", aspectRatio: "2 / 3" },
+  { fileName: "7 kererū.webp", title: "Kererū" },
+  { fileName: "1 floral forearm piece.webp", title: "Floral Forearm" }
 ];
 
 const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title, aspectRatio }, index) => ({
