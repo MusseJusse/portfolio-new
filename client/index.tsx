@@ -2,6 +2,7 @@ import { Route, Router, Routes } from "lakebed/client";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 import rubyBrandIconSource from "./rubyBrandIcon";
+import tiktokSansSource from "./tiktokSansFont";
 
 type ArtworkCollection = {
   id: string;
@@ -1040,11 +1041,19 @@ function SoniaInspiredPage() {
 function StyleBlock() {
   return (
     <style>{`
+      @font-face {
+        font-family: "TikTok Sans Variable";
+        src: url("${tiktokSansSource}") format("woff2");
+        font-style: oblique 0deg 6deg;
+        font-weight: 300 900;
+        font-display: swap;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
       .journey-title, .display-serif { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
       .display-serif { letter-spacing: -0.035em; }
       .dark-portfolio-root { background: #080806; overscroll-behavior: none; scrollbar-width: none; }
       .dark-portfolio-root::-webkit-scrollbar { display: none; }
-      .sonia-inspired-root { background: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 400; scroll-behavior: smooth; }
+      .sonia-inspired-root { background: #fff; font-family: "TikTok Sans Variable", Arial, sans-serif; font-weight: 400; scroll-behavior: smooth; }
       .sonia-header { min-height: 326px; }
       .sonia-menu-button, .sonia-mobile-menu { display: none; }
       .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
@@ -1056,7 +1065,7 @@ function StyleBlock() {
       .sonia-brand-image { position: relative; display: block; width: 180px; height: 180px; overflow: hidden; border: 0; border-radius: 0; }
       .sonia-brand-image img { position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: contain; }
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
-      .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
+      .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "TikTok Sans Variable", Arial, sans-serif; font-size: 14px; font-style: oblique 6deg; font-variation-settings: "slnt" -6; line-height: 1; letter-spacing: .04em; }
       .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
       .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
       .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
