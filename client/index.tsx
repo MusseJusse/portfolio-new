@@ -1063,7 +1063,7 @@ function StyleBlock() {
       .sonia-brand-image { position: relative; display: block; width: 180px; height: 180px; overflow: hidden; border: 0; border-radius: 0; }
       .sonia-brand-image img { position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: contain; }
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
-      .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "TikTok Sans Variable", Arial, sans-serif; font-size: 14px; font-style: oblique 6deg; font-variation-settings: "slnt" -6; line-height: 1; letter-spacing: .04em; }
+      .sonia-brand-subtitle { margin-top: 5px; color: #274d34; font-family: "TikTok Sans Variable", Arial, sans-serif; font-size: 14px; font-style: oblique 6deg; font-variation-settings: "slnt" -6; line-height: 1; letter-spacing: .04em; }
       .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
       .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
       .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
