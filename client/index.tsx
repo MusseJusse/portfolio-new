@@ -967,7 +967,7 @@ function StyleBlock() {
       .sonia-main-nav a:hover { color: #a64d49; }
       .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
-      .sonia-gallery-grid { position: relative; width: 100%; max-width: 1200px; margin-inline: auto; }
+      .sonia-gallery-grid { position: relative; width: 100%; max-width: 1600px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
       .sonia-gallery-grid.is-ready .sonia-gallery-item { opacity: 1; }
       .sonia-gallery-item button { display: block; width: 100%; overflow: hidden; border: 0; padding: 0; background: #fff; cursor: zoom-in; }
