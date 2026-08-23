@@ -794,8 +794,8 @@ function SoniaInspiredPage() {
             <span className="sonia-brand-image">
               <img src={soniaLaiLogoSource} alt="" />
             </span>
-            <span className="sonia-brand-name">RUBY SMYTHE</span>
-            <span className="sonia-brand-subtitle">tattoo &amp; illustration</span>
+            <span className="sonia-brand-name">ruby smythe</span>
+            <span className="sonia-brand-subtitle">tattoo, painting &amp; drawing</span>
           </a>
           <nav className="sonia-main-nav" aria-label="Portfolio sections">
             <a className="active" href="#work">Illustration</a>
@@ -923,9 +923,6 @@ function StyleBlock() {
       .sonia-brand-image { position: relative; display: block; width: 180px; height: 180px; overflow: hidden; border: 0; border-radius: 0; }
       .sonia-brand-image img { position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: contain; }
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
-      .sonia-brand-name::before, .sonia-brand-name::after { position: absolute; top: -2px; height: 34px; width: 8px; border-top: 2px solid #b85854; border-bottom: 2px solid #b85854; content: ""; }
-      .sonia-brand-name::before { left: -16px; border-left: 2px solid #b85854; }
-      .sonia-brand-name::after { right: -12px; border-right: 2px solid #b85854; }
       .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
       .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
       .sonia-main-nav a { color: #303030; text-decoration: none; }
@@ -962,7 +959,6 @@ function StyleBlock() {
         .sonia-brand { z-index: 90; top: 30px; }
         .sonia-brand-image { width: 120px; height: 120px; }
         .sonia-brand-name { margin-top: 10px; font-size: 24px; }
-        .sonia-brand-name::before, .sonia-brand-name::after { height: 31px; }
         .sonia-socials, .sonia-main-nav { display: none; }
         .sonia-menu-button {
           position: absolute;
