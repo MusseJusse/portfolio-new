@@ -751,8 +751,9 @@ function SoniaInspiredPage() {
       cancelAnimationFrame(layoutFrame);
       layoutFrame = requestAnimationFrame(() => {
         const items = galleryItemRefs.current.filter((item): item is HTMLElement => item !== null);
-        const columnCount = window.innerWidth >= 900 ? 3 : window.innerWidth >= 600 ? 2 : 1;
-        const horizontalGap = columnCount === 1 ? 0 : 11;
+        const isMobile = window.innerWidth <= 640;
+        const columnCount = window.innerWidth >= 900 ? 3 : 2;
+        const horizontalGap = isMobile ? 2 : 11;
         const verticalGap = 28;
         const itemWidth = (gallery.clientWidth - horizontalGap * (columnCount - 1)) / columnCount;
         const columnHeights = Array.from({ length: columnCount }, () => 0);
