@@ -1040,19 +1040,11 @@ function SoniaInspiredPage() {
 function StyleBlock() {
   return (
     <style>{`
-      @font-face {
-        font-family: "halyard-display";
-        src: url("https://use.typekit.net/af/81b223/00000000000000007761c7e4/31/l?subset_id=2&fvd=n3&v=3") format("woff2"),
-             url("https://use.typekit.net/af/81b223/00000000000000007761c7e4/31/d?subset_id=2&fvd=n3&v=3") format("woff");
-        font-style: normal;
-        font-weight: 300;
-        font-display: swap;
-      }
       .journey-title, .display-serif { font-family: Baskerville, "Libre Baskerville", Georgia, serif; font-weight: 400; }
       .display-serif { letter-spacing: -0.035em; }
       .dark-portfolio-root { background: #080806; overscroll-behavior: none; scrollbar-width: none; }
       .dark-portfolio-root::-webkit-scrollbar { display: none; }
-      .sonia-inspired-root { background: #fff; font-family: "halyard-display", sans-serif; font-weight: 300; scroll-behavior: smooth; }
+      .sonia-inspired-root { background: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 400; scroll-behavior: smooth; }
       .sonia-header { min-height: 326px; }
       .sonia-menu-button, .sonia-mobile-menu { display: none; }
       .sonia-socials { position: absolute; top: 146px; left: 4.1%; display: flex; align-items: center; gap: 23px; }
