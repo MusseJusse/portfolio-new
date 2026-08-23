@@ -622,7 +622,22 @@ function DarkPortfolioPage() {
   );
 }
 
-const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: string; aspectRatio?: string }> = [
+type GalleryArtwork = {
+  fileName: string;
+  src: string;
+  title: string;
+  aspectRatio: string;
+};
+
+type GalleryCategoryId = "tattoo" | "drawings" | "paintings";
+
+type GalleryCategory = {
+  id: GalleryCategoryId;
+  label: string;
+  items: GalleryArtwork[];
+};
+
+const tattooArtworkSource: ReadonlyArray<{ fileName: string; title?: string; aspectRatio?: string }> = [
   { fileName: "IMG_6601.webp", title: "Tattoo 13" },
   { fileName: "IMG_3554.webp", title: "Tattoo 12" },
   { fileName: "IMG_3112.webp", title: "Tattoo 11" },
@@ -638,21 +653,70 @@ const soniaInspiredArtworkSource: ReadonlyArray<{ fileName: string; title?: stri
   { fileName: "1 floral forearm piece.webp", title: "Floral Forearm" }
 ];
 
-const soniaInspiredArtwork = soniaInspiredArtworkSource.map(({ fileName, title, aspectRatio }, index) => ({
+const tattooArtwork = tattooArtworkSource.map(({ fileName, title, aspectRatio }, index) => ({
   fileName,
   src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/tattoo/${encodeURIComponent(fileName)}`,
   title: title ?? `Artwork No. ${String(index + 1).padStart(2, "0")}`,
   aspectRatio: aspectRatio ?? "3 / 4"
 }));
 
+const drawingAspectRatios = [
+  "3 / 4", "3 / 4", "4 / 5", "3 / 4", "3 / 4", "3 / 4", "4 / 5", "3 / 4", "4 / 5", "3 / 4",
+  "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4", "3 / 4",
+  "3 / 4", "3 / 4", "3 / 4", "3 / 4", "1800 / 1546", "1 / 1", "1 / 1", "4 / 5"
+] as const;
+
+const drawingArtwork = drawingAspectRatios.map((aspectRatio, index) => {
+  const itemNumber = String(index + 1).padStart(2, "0");
+  const fileName = `drawing-${itemNumber}.webp`;
+
+  return {
+    fileName,
+    src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/handdrawn%20flash/web/${fileName}`,
+    title: `Drawing ${itemNumber}`,
+    aspectRatio
+  };
+});
+
+const paintingArtworkSource = [
+  { title: "Painting 01", aspectRatio: "1273 / 1800" },
+  { title: "Painting 02", aspectRatio: "1044 / 1501" },
+  { title: "Painting 03", aspectRatio: "1055 / 1510" },
+  { title: "Kererū", aspectRatio: "1 / 1" },
+  { title: "Kākā", aspectRatio: "1 / 1" },
+  { title: "Tūī", aspectRatio: "1 / 1" },
+  { title: "Bird studies", aspectRatio: "1800 / 1273" }
+] as const;
+
+const paintingArtwork = paintingArtworkSource.map(({ title, aspectRatio }, index) => {
+  const itemNumber = String(index + 1).padStart(2, "0");
+  const fileName = `painting-${itemNumber}.webp`;
+
+  return {
+    fileName,
+    src: `https://raw.githubusercontent.com/MusseJusse/portfolio-new/master/client/assets/painting/web/${fileName}`,
+    title,
+    aspectRatio
+  };
+});
+
+const galleryCategories: GalleryCategory[] = [
+  { id: "tattoo", label: "Tattoo", items: tattooArtwork },
+  { id: "drawings", label: "Drawings", items: drawingArtwork },
+  { id: "paintings", label: "Paintings", items: paintingArtwork }
+];
+
 const soniaLaiLogoSource = rubyBrandIconSource;
 
 function SoniaInspiredPage() {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<GalleryCategoryId>("tattoo");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const galleryItemRefs = useRef<Array<HTMLElement | null>>([]);
+  const selectedCategory = galleryCategories.find((category) => category.id === selectedCategoryId) ?? galleryCategories[0];
+  const soniaInspiredArtwork = selectedCategory.items;
 
   function showPrevious() {
     setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
@@ -714,6 +778,7 @@ function SoniaInspiredPage() {
     const gallery = galleryRef.current;
     if (!gallery) return;
 
+    gallery.classList.remove("is-ready");
     let layoutFrame = 0;
 
     function scheduleLayout() {
@@ -756,10 +821,19 @@ function SoniaInspiredPage() {
       cancelAnimationFrame(layoutFrame);
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [selectedCategoryId]);
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
+  }
+
+  function selectCategory(categoryId: GalleryCategoryId) {
+    if (categoryId === selectedCategoryId) return;
+
+    galleryRef.current?.classList.remove("is-ready");
+    setActiveIndex(null);
+    setSelectedCategoryId(categoryId);
+    galleryItemRefs.current = [];
   }
 
   return (
@@ -805,7 +879,17 @@ function SoniaInspiredPage() {
             <span className="sonia-brand-subtitle">tattoo, painting &amp; drawing</span>
           </a>
           <nav className="sonia-main-nav" aria-label="Portfolio sections">
-            <a className="active" href="#work">Illustration</a>
+            {galleryCategories.map((category) => (
+              <button
+                className={cx(category.id === selectedCategoryId && "active")}
+                key={category.id}
+                type="button"
+                aria-pressed={category.id === selectedCategoryId}
+                onClick={() => selectCategory(category.id)}
+              >
+                {category.label}
+              </button>
+            ))}
             <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Purchase</a>
             <a href="#about">About</a>
           </nav>
@@ -820,7 +904,22 @@ function SoniaInspiredPage() {
           aria-label="Site menu"
         >
           <nav className="sonia-mobile-nav" aria-label="Portfolio sections">
-            <a className="active" href="#work" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Illustration</a>
+            {galleryCategories.map((category) => (
+              <button
+                className={cx(category.id === selectedCategoryId && "active")}
+                key={category.id}
+                type="button"
+                tabIndex={mobileMenuOpen ? 0 : -1}
+                aria-pressed={category.id === selectedCategoryId}
+                onClick={() => {
+                  selectCategory(category.id);
+                  closeMobileMenu();
+                  mobileMenuButtonRef.current?.focus();
+                }}
+              >
+                {category.label}
+              </button>
+            ))}
             <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>Purchase</a>
             <a href="#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>About</a>
           </nav>
@@ -842,7 +941,7 @@ function SoniaInspiredPage() {
         </div>
       </header>
 
-      <section id="work" className="sonia-gallery" aria-label="Selected work">
+      <section id="work" className="sonia-gallery" aria-label={`${selectedCategory.label} work`}>
         <div className="sonia-gallery-grid" ref={galleryRef}>
           {soniaInspiredArtwork.map((item, itemIndex) => (
             <figure
@@ -932,9 +1031,9 @@ function StyleBlock() {
       .sonia-brand-name { position: relative; margin-top: 12px; font-size: 27px; line-height: 1; letter-spacing: .065em; white-space: nowrap; }
       .sonia-brand-subtitle { margin-top: 5px; color: #b85854; font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 14px; line-height: 1; letter-spacing: .04em; }
       .sonia-main-nav { display: flex; gap: 27px; margin-top: 25px; font-size: 16px; }
-      .sonia-main-nav a { color: #303030; text-decoration: none; }
-      .sonia-main-nav a:hover { color: #a64d49; }
-      .sonia-main-nav a.active { border-bottom: 1px solid currentColor; }
+      .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
+      .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
+      .sonia-main-nav .active { border-bottom: 1px solid currentColor; }
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; max-width: 1800px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
@@ -1037,9 +1136,9 @@ function StyleBlock() {
           transition: opacity 380ms cubic-bezier(.65,0,.35,1), transform 380ms cubic-bezier(.65,0,.35,1);
         }
         .sonia-mobile-menu.is-open .sonia-mobile-nav { opacity: 1; transform: translateY(0); transition-delay: 45ms; }
-        .sonia-mobile-nav a { color: inherit; text-decoration: none; }
-        .sonia-mobile-nav a:active { transform: scale(.97); }
-        .sonia-mobile-nav a:focus-visible { outline: 2px solid #a64d49; outline-offset: 6px; }
+        .sonia-mobile-nav a, .sonia-mobile-nav button { border: 0; padding: 0; background: transparent; color: inherit; font: inherit; text-decoration: none; cursor: pointer; }
+        .sonia-mobile-nav a:active, .sonia-mobile-nav button:active { transform: scale(.97); }
+        .sonia-mobile-nav a:focus-visible, .sonia-mobile-nav button:focus-visible { outline: 2px solid #a64d49; outline-offset: 6px; }
         .sonia-mobile-socials {
           align-self: end;
           grid-row: 3;
