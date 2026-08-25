@@ -2,6 +2,13 @@ import { Route, Router, Routes } from "lakebed/client";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 import rubyBrandIconSource from "./rubyBrandIcon";
+import {
+  BotanicalCabinetLanding,
+  FieldNotesLanding,
+  FlashWallLanding,
+  ModernExhibitionLanding,
+  NightBloomLanding
+} from "./landingDesigns";
 
 type ArtworkCollection = {
   id: string;
@@ -1254,6 +1261,11 @@ export function App() {
       <Routes>
         <Route path="/" element={<SoniaInspiredPage />} />
         <Route path="/new-design" element={<DarkPortfolioPage />} />
+        <Route path="/1" element={<FieldNotesLanding />} />
+        <Route path="/2" element={<NightBloomLanding />} />
+        <Route path="/3" element={<FlashWallLanding />} />
+        <Route path="/4" element={<ModernExhibitionLanding />} />
+        <Route path="/5" element={<BotanicalCabinetLanding />} />
         <Route path="*" element={<SoniaInspiredPage />} />
       </Routes>
     </Router>
