@@ -1252,9 +1252,9 @@ export function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/2" element={<DarkPortfolioPage />} />
-        <Route path="/3" element={<SoniaInspiredPage />} />
-        <Route path="*" element={<HomePage />} />
+        <Route path="/" element={<SoniaInspiredPage />} />
+        <Route path="/new-design" element={<DarkPortfolioPage />} />
+        <Route path="*" element={<SoniaInspiredPage />} />
       </Routes>
     </Router>
   );
