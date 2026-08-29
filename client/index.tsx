@@ -1264,7 +1264,7 @@ function StyleBlock() {
       .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
       .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
       .sonia-main-nav .active { border-bottom: 1px solid currentColor; }
-      .sonia-landing-carousel { padding: 48px 16px 110px; }
+      .sonia-landing-carousel { padding: 48px 16px 0; }
       .sonia-carousel-heading { display: flex; width: 100%; max-width: 1120px; align-items: center; justify-content: space-between; margin: 0 auto 13px; color: #383838; font-size: 12px; line-height: 1.4; }
       .sonia-carousel-heading h1 { margin: 0; font: inherit; }
       .sonia-art-carousel { width: 100%; max-width: 1120px; margin-inline: auto; }
@@ -1416,7 +1416,7 @@ function StyleBlock() {
         .sonia-mobile-socials svg { width: 23px; height: 23px; }
         .sonia-mobile-socials a:active { transform: scale(.92); }
         .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
-        .sonia-landing-carousel { padding: 32px 4.05% 86px; }
+        .sonia-landing-carousel { padding: 32px 4.05% 0; }
         .sonia-carousel-stage { max-height: none; aspect-ratio: 4 / 5; }
         .sonia-carousel-under { min-height: 76px; }
         .sonia-gallery { padding: 32px 4.05% 86px; }
