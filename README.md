@@ -8,7 +8,10 @@ npx lakebed dev
 
 The app includes the original portfolio routes plus five landing page concepts:
 
-- `/`: the main portfolio gallery.
+- `/`: the carousel-led landing page and artist introduction.
+- `/gallery#tattoo`: the tattoo gallery.
+- `/gallery#drawings`: the drawings gallery.
+- `/gallery#paintings`: the paintings gallery.
 - `/new-design`: the dark portfolio design.
 - `/1`: editorial field notes.
 - `/2`: cinematic night bloom.

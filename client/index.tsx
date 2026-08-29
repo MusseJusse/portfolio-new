@@ -1,4 +1,4 @@
-import { Route, Router, Routes } from "lakebed/client";
+import { Link, Route, Router, Routes, useLocation, useNavigate } from "lakebed/client";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { artwork, type Artwork } from "./generatedArtwork";
 import rubyBrandIconSource from "./rubyBrandIcon";
@@ -54,23 +54,41 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
+let documentScrollLockCount = 0;
+let restoreDocumentScroll: (() => void) | null = null;
+
 function lockDocumentScroll() {
-  const previousBodyOverflow = document.body.style.overflow;
-  const previousBodyPaddingRight = document.body.style.paddingRight;
-  const previousHtmlOverflow = document.documentElement.style.overflow;
-  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  if (documentScrollLockCount === 0) {
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyPaddingRight = document.body.style.paddingRight;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-  document.body.style.overflow = "hidden";
-  document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
-  if (scrollbarWidth > 0) {
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    restoreDocumentScroll = () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.paddingRight = previousBodyPaddingRight;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
   }
 
+  documentScrollLockCount += 1;
+  let released = false;
+
   return () => {
-    document.body.style.overflow = previousBodyOverflow;
-    document.body.style.paddingRight = previousBodyPaddingRight;
-    document.documentElement.style.overflow = previousHtmlOverflow;
+    if (released) return;
+    released = true;
+    documentScrollLockCount = Math.max(0, documentScrollLockCount - 1);
+    if (documentScrollLockCount > 0) return;
+
+    restoreDocumentScroll?.();
+    restoreDocumentScroll = null;
   };
 }
 
@@ -717,26 +735,7 @@ const galleryCategories: GalleryCategory[] = [
 
 const soniaLaiLogoSource = rubyBrandIconSource;
 
-function SoniaInspiredPage() {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<GalleryCategoryId>("tattoo");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
-  const galleryRef = useRef<HTMLDivElement | null>(null);
-  const galleryItemRefs = useRef<Array<HTMLElement | null>>([]);
-  const paintingYearDividerRef = useRef<HTMLHeadingElement | null>(null);
-  const selectedCategory = galleryCategories.find((category) => category.id === selectedCategoryId) ?? galleryCategories[0];
-  const soniaInspiredArtwork = selectedCategory.items;
-  const paintingYearBreakIndex = soniaInspiredArtwork.findIndex((item) => item.year === 2022);
-
-  function showPrevious() {
-    setActiveIndex((current) => (current === null ? current : (current + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length));
-  }
-
-  function showNext() {
-    setActiveIndex((current) => (current === null ? current : (current + 1) % soniaInspiredArtwork.length));
-  }
-
+function useSoniaRootClass() {
   useEffect(() => {
     document.documentElement.classList.add("sonia-inspired-root");
     document.body.classList.add("sonia-inspired-root");
@@ -746,24 +745,16 @@ function SoniaInspiredPage() {
       document.body.classList.remove("sonia-inspired-root");
     };
   }, []);
+}
 
-  useEffect(() => {
-    if (activeIndex === null) return;
+function categoryFromHash(hash: string): GalleryCategoryId {
+  const categoryId = hash.slice(1);
+  return galleryCategories.some((category) => category.id === categoryId) ? categoryId as GalleryCategoryId : "tattoo";
+}
 
-    const unlockDocumentScroll = lockDocumentScroll();
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setActiveIndex(null);
-      if (event.key === "ArrowLeft") showPrevious();
-      if (event.key === "ArrowRight") showNext();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      unlockDocumentScroll();
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeIndex]);
+function SoniaHeader({ activeCategoryId, onMenuOpen }: { activeCategoryId?: GalleryCategoryId; onMenuOpen?: () => void }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -785,6 +776,334 @@ function SoniaInspiredPage() {
     };
   }, [mobileMenuOpen]);
 
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
+
+  function closeMobileMenuAndRestoreFocus() {
+    closeMobileMenu();
+    requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+  }
+
+  function toggleMobileMenu() {
+    const nextOpen = !mobileMenuOpen;
+    if (nextOpen) onMenuOpen?.();
+    setMobileMenuOpen(nextOpen);
+  }
+
+  return (
+    <header className="sonia-header relative" aria-label="Primary">
+      <button
+        ref={mobileMenuButtonRef}
+        className={cx("sonia-menu-button", mobileMenuOpen && "is-open")}
+        type="button"
+        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={mobileMenuOpen}
+        aria-controls="sonia-mobile-menu"
+        onClick={toggleMobileMenu}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      <div className="sonia-brand">
+        <Link className="sonia-brand-mark" to="/" aria-label="Ruby Smythe, home">
+          <span className="sonia-brand-image">
+            <img src={soniaLaiLogoSource} alt="" />
+          </span>
+          <span className="sonia-brand-name">ruby smythe</span>
+          <span className="sonia-brand-subtitle">tattoo, painting &amp; drawing</span>
+        </Link>
+        <nav className="sonia-main-nav" aria-label="Portfolio sections">
+          {galleryCategories.map((category) => (
+            <Link
+              aria-current={category.id === activeCategoryId ? "page" : undefined}
+              className={cx(category.id === activeCategoryId && "active")}
+              to={`/gallery#${category.id}`}
+              key={category.id}
+            >
+              {category.label}
+            </Link>
+          ))}
+          <Link to="/#about">About</Link>
+          <div className="sonia-socials" role="group" aria-label="Social links">
+            <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+              </svg>
+            </a>
+            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Inkdependent Studio">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <div
+        id="sonia-mobile-menu"
+        className={cx("sonia-mobile-menu", mobileMenuOpen && "is-open")}
+        role="dialog"
+        aria-modal={mobileMenuOpen}
+        aria-hidden={!mobileMenuOpen}
+        aria-label="Site menu"
+      >
+        <nav className="sonia-mobile-nav" aria-label="Portfolio sections">
+          <Link to="/" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenuAndRestoreFocus}>Home</Link>
+          {galleryCategories.map((category) => (
+            <Link
+              aria-current={category.id === activeCategoryId ? "page" : undefined}
+              className={cx(category.id === activeCategoryId && "active")}
+              to={`/gallery#${category.id}`}
+              key={category.id}
+              tabIndex={mobileMenuOpen ? 0 : -1}
+              onClick={closeMobileMenuAndRestoreFocus}
+            >
+              {category.label}
+            </Link>
+          ))}
+          <Link to="/#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenuAndRestoreFocus}>About</Link>
+        </nav>
+        <div className="sonia-mobile-socials" role="group" aria-label="Social links">
+          <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on Instagram" onClick={closeMobileMenu}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+              <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
+            </svg>
+          </a>
+          <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Inkdependent Studio" onClick={closeMobileMenu}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+              <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+const landingCarouselItems: GalleryArtwork[] = [
+  tattooArtwork[0],
+  paintingArtwork[0],
+  tattooArtwork[1],
+  paintingArtwork[1],
+  tattooArtwork[11]
+];
+
+function SoniaLandingPage() {
+  const location = useLocation();
+  const carouselTrackRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{ pointerId: number; pointerX: number; scrollLeft: number } | null>(null);
+  const [carouselProgress, setCarouselProgress] = useState(0);
+  const activeCarouselIndex = Math.min(landingCarouselItems.length - 1, Math.round(carouselProgress));
+
+  useSoniaRootClass();
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (location.hash === "#about") {
+        document.querySelector("#about")?.scrollIntoView();
+        return;
+      }
+
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
+  }, [location.hash]);
+
+  function scrollToCarouselItem(index: number) {
+    const track = carouselTrackRef.current;
+    if (!track) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({ left: index * track.clientWidth, behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
+  return (
+    <main id="top" className="min-h-screen bg-white text-[#191919]">
+      <StyleBlock />
+      <SoniaHeader />
+
+      <section className="sonia-landing-carousel" aria-labelledby="selected-work-title">
+        <div className="sonia-carousel-heading">
+          <h1 id="selected-work-title">Selected work</h1>
+          <span>{String(activeCarouselIndex + 1).padStart(2, "0")} / {String(landingCarouselItems.length).padStart(2, "0")}</span>
+        </div>
+        <div className="sonia-art-carousel">
+          <div className="sonia-carousel-stage">
+            <ol className="sonia-carousel-slides">
+              {landingCarouselItems.map((item, index) => {
+                const activeAmount = Math.max(0, 1 - Math.abs(carouselProgress - index));
+
+                return (
+                  <li
+                    className="sonia-carousel-slide"
+                    key={item.fileName}
+                    style={{ opacity: activeAmount, transform: `scale(${0.985 + activeAmount * 0.015})` }}
+                  >
+                    <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={index < 2 ? "eager" : "lazy"} />
+                  </li>
+                );
+              })}
+            </ol>
+            <div
+              className="sonia-carousel-drag"
+              ref={carouselTrackRef}
+              role="group"
+              tabIndex={0}
+              aria-label="Selected tattoos and paintings. Swipe, drag, or use arrow keys to browse."
+              onScroll={(event) => {
+                const track = event.currentTarget;
+                setCarouselProgress(track.scrollLeft / Math.max(track.clientWidth, 1));
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowRight") {
+                  event.preventDefault();
+                  scrollToCarouselItem(Math.min(activeCarouselIndex + 1, landingCarouselItems.length - 1));
+                }
+                if (event.key === "ArrowLeft") {
+                  event.preventDefault();
+                  scrollToCarouselItem(Math.max(activeCarouselIndex - 1, 0));
+                }
+              }}
+              onPointerDown={(event) => {
+                if (event.pointerType !== "mouse") return;
+                const track = event.currentTarget;
+                dragRef.current = { pointerId: event.pointerId, pointerX: event.clientX, scrollLeft: track.scrollLeft };
+                track.classList.add("is-dragging");
+                track.setPointerCapture(event.pointerId);
+              }}
+              onPointerMove={(event) => {
+                const drag = dragRef.current;
+                if (!drag) return;
+                event.currentTarget.scrollLeft = drag.scrollLeft - (event.clientX - drag.pointerX);
+              }}
+              onPointerUp={(event) => {
+                const drag = dragRef.current;
+                if (!drag) return;
+                const track = event.currentTarget;
+                const targetIndex = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+                dragRef.current = null;
+                track.classList.remove("is-dragging");
+                if (track.hasPointerCapture(drag.pointerId)) track.releasePointerCapture(drag.pointerId);
+                scrollToCarouselItem(targetIndex);
+              }}
+              onPointerCancel={(event) => {
+                dragRef.current = null;
+                event.currentTarget.classList.remove("is-dragging");
+              }}
+            >
+              {landingCarouselItems.map((item) => <span className="sonia-carousel-stop" key={item.fileName} />)}
+            </div>
+          </div>
+          <div className="sonia-carousel-under">
+            <p aria-live="polite">{landingCarouselItems[activeCarouselIndex].title}</p>
+            <div className="sonia-carousel-tools">
+              <div className="sonia-carousel-markers" aria-label="Choose artwork">
+                {landingCarouselItems.map((item, index) => {
+                  const activeAmount = Math.max(0, 1 - Math.abs(carouselProgress - index));
+
+                  return (
+                    <button
+                      aria-current={index === activeCarouselIndex ? "true" : undefined}
+                      aria-label={`Show ${item.title}`}
+                      className="sonia-carousel-marker"
+                      key={item.fileName}
+                      style={{ flexGrow: 1 + activeAmount * 3, backgroundColor: `rgba(144, 52, 76, ${0.22 + activeAmount * 0.78})` }}
+                      type="button"
+                      onClick={() => scrollToCarouselItem(index)}
+                    />
+                  );
+                })}
+              </div>
+              <span>swipe / drag</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="sonia-about" id="about" aria-labelledby="about-title">
+        <div className="sonia-about-inner">
+          <h2 id="about-title">About</h2>
+          <div className="sonia-about-grid">
+            <p>Ruby Smythe is a New Zealand-born painter and tattoo artist based in Edinburgh. Her work draws from native birds, botanical forms, and the small details found in the natural world. Ruby works across fine-line tattooing, drawing, and gouache from Inkdependent Studio in Haymarket.</p>
+            <div className="sonia-about-links">
+              <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer">Instagram ↗</a>
+              <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Appointments at Inkdependent ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="sonia-footer">
+        <p>Ruby Smythe is a New Zealand-born painter and tattoo artist based in Edinburgh.</p>
+        <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer">@byrubydesigns</a>
+      </footer>
+    </main>
+  );
+}
+
+function SoniaGalleryPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const selectedCategoryId = categoryFromHash(location.hash);
+  const [activeSelection, setActiveSelection] = useState<{ categoryId: GalleryCategoryId; index: number } | null>(null);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
+  const paintingYearDividerRef = useRef<HTMLHeadingElement | null>(null);
+  const selectedCategory = galleryCategories.find((category) => category.id === selectedCategoryId) ?? galleryCategories[0];
+  const soniaInspiredArtwork = selectedCategory.items;
+  const activeIndex = activeSelection?.categoryId === selectedCategoryId ? activeSelection.index : null;
+  const paintingYearBreakIndex = soniaInspiredArtwork.findIndex((item) => item.year === 2022);
+
+  function showPrevious() {
+    setActiveSelection((current) => current?.categoryId === selectedCategoryId
+      ? { ...current, index: (current.index + soniaInspiredArtwork.length - 1) % soniaInspiredArtwork.length }
+      : current);
+  }
+
+  function showNext() {
+    setActiveSelection((current) => current?.categoryId === selectedCategoryId
+      ? { ...current, index: (current.index + 1) % soniaInspiredArtwork.length }
+      : current);
+  }
+
+  useSoniaRootClass();
+
+  useEffect(() => {
+    const canonicalHash = `#${selectedCategoryId}`;
+    if (location.hash !== canonicalHash) navigate(`/gallery${canonicalHash}`, { replace: true });
+  }, [location.hash, navigate, selectedCategoryId]);
+
+  useEffect(() => {
+    galleryRef.current?.classList.remove("is-ready");
+    setActiveSelection(null);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [selectedCategoryId]);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const unlockDocumentScroll = lockDocumentScroll();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setActiveSelection(null);
+      if (event.key === "ArrowLeft") showPrevious();
+      if (event.key === "ArrowRight") showNext();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      unlockDocumentScroll();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex]);
+
   useEffect(() => {
     const gallery = galleryRef.current;
     if (!gallery) return;
@@ -795,7 +1114,7 @@ function SoniaInspiredPage() {
     function scheduleLayout() {
       cancelAnimationFrame(layoutFrame);
       layoutFrame = requestAnimationFrame(() => {
-        const items = galleryItemRefs.current.filter((item): item is HTMLElement => item !== null);
+        const items = Array.from(gallery.querySelectorAll<HTMLElement>(".sonia-gallery-item"));
         const isMobile = window.innerWidth <= 640;
         const columnCount = window.innerWidth >= 900 ? 3 : 2;
         const horizontalGap = isMobile ? 2 : 11;
@@ -847,9 +1166,7 @@ function SoniaInspiredPage() {
 
     const resizeObserver = new ResizeObserver(scheduleLayout);
     resizeObserver.observe(gallery);
-    galleryItemRefs.current.forEach((item) => {
-      if (item) resizeObserver.observe(item);
-    });
+    gallery.querySelectorAll<HTMLElement>(".sonia-gallery-item").forEach((item) => resizeObserver.observe(item));
     if (paintingYearDividerRef.current) resizeObserver.observe(paintingYearDividerRef.current);
     scheduleLayout();
 
@@ -859,125 +1176,10 @@ function SoniaInspiredPage() {
     };
   }, [selectedCategoryId]);
 
-  function closeMobileMenu() {
-    setMobileMenuOpen(false);
-  }
-
-  function toggleMobileMenu() {
-    setActiveIndex(null);
-    setMobileMenuOpen((open) => !open);
-  }
-
-  function selectCategory(categoryId: GalleryCategoryId) {
-    if (categoryId === selectedCategoryId) return;
-
-    galleryRef.current?.classList.remove("is-ready");
-    setActiveIndex(null);
-    setSelectedCategoryId(categoryId);
-    galleryItemRefs.current = [];
-  }
-
   return (
     <main id="top" className="min-h-screen bg-white text-[#191919]">
       <StyleBlock />
-      <header className="sonia-header relative" aria-label="Primary">
-        <button
-          ref={mobileMenuButtonRef}
-          className={cx("sonia-menu-button", mobileMenuOpen && "is-open")}
-          type="button"
-          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileMenuOpen}
-          aria-controls="sonia-mobile-menu"
-          onClick={toggleMobileMenu}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-
-        <div className="sonia-brand">
-          <a className="sonia-brand-mark" href="#top" aria-label="Ruby Smythe, back to top">
-            <span className="sonia-brand-image">
-              <img src={soniaLaiLogoSource} alt="" />
-            </span>
-            <span className="sonia-brand-name">ruby smythe</span>
-            <span className="sonia-brand-subtitle">tattoo, painting &amp; drawing</span>
-          </a>
-          <nav className="sonia-main-nav" aria-label="Portfolio sections">
-            {galleryCategories.map((category) => (
-              <button
-                className={cx(category.id === selectedCategoryId && "active")}
-                key={category.id}
-                type="button"
-                aria-pressed={category.id === selectedCategoryId}
-                onClick={() => selectCategory(category.id)}
-              >
-                {category.label}
-              </button>
-            ))}
-            <a href="#about">About</a>
-            <div className="sonia-socials" role="group" aria-label="Social links">
-              <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" aria-label="Ruby Smythe on Instagram">
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                  <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
-                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
-                  <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
-                </svg>
-              </a>
-              <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" aria-label="Inkdependent Studio">
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
-                  <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
-                </svg>
-              </a>
-            </div>
-          </nav>
-        </div>
-
-        <div
-          id="sonia-mobile-menu"
-          className={cx("sonia-mobile-menu", mobileMenuOpen && "is-open")}
-          role="dialog"
-          aria-modal={mobileMenuOpen}
-          aria-hidden={!mobileMenuOpen}
-          aria-label="Site menu"
-        >
-          <nav className="sonia-mobile-nav" aria-label="Portfolio sections">
-            {galleryCategories.map((category) => (
-              <button
-                className={cx(category.id === selectedCategoryId && "active")}
-                key={category.id}
-                type="button"
-                tabIndex={mobileMenuOpen ? 0 : -1}
-                aria-pressed={category.id === selectedCategoryId}
-                onClick={() => {
-                  selectCategory(category.id);
-                  closeMobileMenu();
-                  mobileMenuButtonRef.current?.focus();
-                }}
-              >
-                {category.label}
-              </button>
-            ))}
-            <a href="#about" tabIndex={mobileMenuOpen ? 0 : -1} onClick={closeMobileMenu}>About</a>
-          </nav>
-          <div className="sonia-mobile-socials" role="group" aria-label="Social links">
-            <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Ruby Smythe on Instagram" onClick={closeMobileMenu}>
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" />
-                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
-                <circle cx="17.4" cy="6.8" r="1.15" fill="currentColor" />
-              </svg>
-            </a>
-            <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer" tabIndex={mobileMenuOpen ? 0 : -1} aria-label="Inkdependent Studio" onClick={closeMobileMenu}>
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                <path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
-                <path d="M9.5 20v-6h5v6" stroke="currentColor" stroke-width="1.7" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </header>
+      <SoniaHeader activeCategoryId={selectedCategoryId} onMenuOpen={() => setActiveSelection(null)} />
 
       <section id="work" className="sonia-gallery" aria-label={`${selectedCategory.label} work`}>
         {selectedCategoryId === "paintings" ? <h2 className="sonia-gallery-year-heading">2026</h2> : null}
@@ -990,11 +1192,8 @@ function SoniaInspiredPage() {
               <figure
                 className="sonia-gallery-item"
                 key={item.fileName}
-                ref={(element) => {
-                  galleryItemRefs.current[itemIndex] = element;
-                }}
               >
-                <button type="button" onClick={() => setActiveIndex(itemIndex)} aria-label={`View full image of ${item.title}`}>
+                <button type="button" onClick={() => setActiveSelection({ categoryId: selectedCategoryId, index: itemIndex })} aria-label={`View full image of ${item.title}`}>
                   <img src={item.src} alt={`${item.title}, artwork by Ruby Smythe`} loading={itemIndex > 6 ? "lazy" : "eager"} style={{ aspectRatio: item.aspectRatio }} />
                 </button>
                 <figcaption>{item.title}</figcaption>
@@ -1010,8 +1209,8 @@ function SoniaInspiredPage() {
       </footer>
 
       {activeIndex !== null ? (
-        <div className="sonia-lightbox" role="dialog" aria-modal="true" aria-label={`Full image of ${soniaInspiredArtwork[activeIndex].title}`} onClick={() => setActiveIndex(null)}>
-          <button className="sonia-lightbox-close" type="button" aria-label="Close full image" onClick={() => setActiveIndex(null)}>
+        <div className="sonia-lightbox" role="dialog" aria-modal="true" aria-label={`Full image of ${soniaInspiredArtwork[activeIndex].title}`} onClick={() => setActiveSelection(null)}>
+          <button className="sonia-lightbox-close" type="button" aria-label="Close full image" onClick={() => setActiveSelection(null)}>
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="1.5" /></svg>
           </button>
           <button
@@ -1078,6 +1277,35 @@ function StyleBlock() {
       .sonia-main-nav a, .sonia-main-nav button { border: 0; padding: 0; background: transparent; color: #303030; font: inherit; text-decoration: none; cursor: pointer; }
       .sonia-main-nav a:hover, .sonia-main-nav button:hover { color: #a64d49; }
       .sonia-main-nav .active { border-bottom: 1px solid currentColor; }
+      .sonia-landing-carousel { padding: 48px 16px 110px; }
+      .sonia-carousel-heading { display: flex; width: 100%; max-width: 1120px; align-items: center; justify-content: space-between; margin: 0 auto 13px; color: #383838; font-size: 12px; line-height: 1.4; }
+      .sonia-carousel-heading h1 { margin: 0; font: inherit; }
+      .sonia-art-carousel { width: 100%; max-width: 1120px; margin-inline: auto; }
+      .sonia-carousel-stage { position: relative; width: 100%; max-height: 760px; overflow: hidden; aspect-ratio: 16 / 9; background: #f4f3f0; isolation: isolate; }
+      .sonia-carousel-slides { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+      .sonia-carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 90ms linear, transform 90ms linear; }
+      .sonia-carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+      .sonia-carousel-slide:nth-child(1) img { object-position: 50% 52%; }
+      .sonia-carousel-slide:nth-child(2) img { object-position: center; }
+      .sonia-carousel-slide:nth-child(3) img { object-position: 52% center; }
+      .sonia-carousel-slide:nth-child(4) img { object-position: center 42%; }
+      .sonia-carousel-slide:nth-child(5) img { object-position: center; }
+      .sonia-carousel-drag { position: absolute; inset: 0; z-index: 2; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; touch-action: auto; }
+      .sonia-carousel-drag::-webkit-scrollbar { display: none; }
+      .sonia-carousel-drag.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+      .sonia-carousel-stop { flex: 0 0 100%; height: 100%; scroll-snap-align: center; }
+      .sonia-carousel-under { display: grid; min-height: 72px; grid-template-columns: 1fr auto; gap: 18px; align-items: start; border-bottom: 1px solid #dedbd5; padding: 14px 0 17px; }
+      .sonia-carousel-under p { margin: 0; color: #353535; font-size: 14px; line-height: 1.45; }
+      .sonia-carousel-tools { display: grid; justify-items: end; gap: 10px; color: #777; font-size: 11px; line-height: 1.4; }
+      .sonia-carousel-markers { display: flex; width: min(42vw, 210px); align-items: center; justify-content: center; gap: 5px; }
+      .sonia-carousel-marker { appearance: none; width: 7px; min-width: 7px; height: 6px; border: 0; border-radius: 99px; padding: 0; cursor: pointer; transition: flex-grow 90ms linear, background-color 90ms linear; }
+      .sonia-about { border-top: 1px solid #dedbd5; padding: 52px 4.05% 82px; }
+      .sonia-about-inner { width: 100%; max-width: 1120px; margin-inline: auto; }
+      .sonia-about h2 { margin: 0 0 30px; color: #383838; font-size: 14px; font-weight: 400; line-height: 1.25; }
+      .sonia-about-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: start; }
+      .sonia-about-grid p { max-width: 60ch; margin: 0; color: #383838; font-size: 15px; line-height: 1.55; text-wrap: pretty; }
+      .sonia-about-links { display: grid; gap: 11px; color: #90344c; font-size: 13px; line-height: 1.45; }
+      .sonia-about-links a { width: max-content; border-bottom: 1px solid currentColor; }
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; max-width: 1800px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
@@ -1207,6 +1435,10 @@ function StyleBlock() {
         .sonia-mobile-socials svg { width: 23px; height: 23px; }
         .sonia-mobile-socials a:active { transform: scale(.92); }
         .sonia-mobile-socials a:focus-visible { outline: 2px solid #a64d49; outline-offset: 2px; }
+        .sonia-landing-carousel { padding: 32px 4.05% 86px; }
+        .sonia-carousel-stage { max-height: none; aspect-ratio: 4 / 5; }
+        .sonia-carousel-under { min-height: 76px; }
+        .sonia-about-grid { grid-template-columns: 1fr; }
         .sonia-gallery { padding: 32px 4.05% 86px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
@@ -1261,14 +1493,15 @@ export function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SoniaInspiredPage />} />
+        <Route path="/" element={<SoniaLandingPage />} />
+        <Route path="/gallery" element={<SoniaGalleryPage />} />
         <Route path="/new-design" element={<DarkPortfolioPage />} />
         <Route path="/1" element={<FieldNotesLanding />} />
         <Route path="/2" element={<NightBloomLanding />} />
         <Route path="/3" element={<FlashWallLanding />} />
         <Route path="/4" element={<ModernExhibitionLanding />} />
         <Route path="/5" element={<BotanicalCabinetLanding />} />
-        <Route path="*" element={<SoniaInspiredPage />} />
+        <Route path="*" element={<SoniaLandingPage />} />
       </Routes>
     </Router>
   );
