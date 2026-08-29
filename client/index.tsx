@@ -1028,20 +1028,7 @@ function SoniaLandingPage() {
         </div>
       </section>
 
-      <section className="sonia-about" id="about" aria-labelledby="about-title">
-        <div className="sonia-about-inner">
-          <h2 id="about-title">About</h2>
-          <div className="sonia-about-grid">
-            <p>Ruby Smythe is a New Zealand-born painter and tattoo artist based in Edinburgh. Her work draws from native birds, botanical forms, and the small details found in the natural world. Ruby works across fine-line tattooing, drawing, and gouache from Inkdependent Studio in Haymarket.</p>
-            <div className="sonia-about-links">
-              <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer">Instagram ↗</a>
-              <a href="https://inkdependent.eu/" target="_blank" rel="noreferrer">Appointments at Inkdependent ↗</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="sonia-footer">
+      <footer className="sonia-footer" id="about">
         <p>Ruby Smythe is a New Zealand-born painter and tattoo artist based in Edinburgh.</p>
         <a href="https://www.instagram.com/byrubydesigns" target="_blank" rel="noreferrer">@byrubydesigns</a>
       </footer>
@@ -1299,13 +1286,6 @@ function StyleBlock() {
       .sonia-carousel-tools { display: grid; justify-items: end; gap: 10px; color: #777; font-size: 11px; line-height: 1.4; }
       .sonia-carousel-markers { display: flex; width: min(42vw, 210px); align-items: center; justify-content: center; gap: 5px; }
       .sonia-carousel-marker { appearance: none; width: 7px; min-width: 7px; height: 6px; border: 0; border-radius: 99px; padding: 0; cursor: pointer; transition: flex-grow 90ms linear, background-color 90ms linear; }
-      .sonia-about { border-top: 1px solid #dedbd5; padding: 52px 4.05% 82px; }
-      .sonia-about-inner { width: 100%; max-width: 1120px; margin-inline: auto; }
-      .sonia-about h2 { margin: 0 0 30px; color: #383838; font-size: 14px; font-weight: 400; line-height: 1.25; }
-      .sonia-about-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: start; }
-      .sonia-about-grid p { max-width: 60ch; margin: 0; color: #383838; font-size: 15px; line-height: 1.55; text-wrap: pretty; }
-      .sonia-about-links { display: grid; gap: 11px; color: #90344c; font-size: 13px; line-height: 1.45; }
-      .sonia-about-links a { width: max-content; border-bottom: 1px solid currentColor; }
       .sonia-gallery { padding: 48px 16px 44px; background: #fff; }
       .sonia-gallery-grid { position: relative; width: 100%; max-width: 1800px; margin-inline: auto; }
       .sonia-gallery-item { position: absolute; top: 0; left: 0; margin: 0; opacity: 0; }
@@ -1438,7 +1418,6 @@ function StyleBlock() {
         .sonia-landing-carousel { padding: 32px 4.05% 86px; }
         .sonia-carousel-stage { max-height: none; aspect-ratio: 4 / 5; }
         .sonia-carousel-under { min-height: 76px; }
-        .sonia-about-grid { grid-template-columns: 1fr; }
         .sonia-gallery { padding: 32px 4.05% 86px; }
         .sonia-footer { flex-direction: column; }
         .sonia-lightbox { padding: 64px 42px 28px; }
